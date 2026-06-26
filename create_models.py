@@ -7,6 +7,67 @@ from sklearn.ensemble import RandomForestClassifier, HistGradientBoostingClassif
 from xgboost import XGBClassifier
 
 
+def find_best_models(linear_X, tree_X, Y, objective_fn, num_trials):
+    """
+    Takes in the data and runs the all four models with every possible combinatoon of each parameter
+
+    Params:
+        linear_X (DataFrame): the 16 variables that are being considered to predict no-show for
+                              linear models
+        tree_X (DataFrame): the 16 variables that are beign considered to predict no-show for
+                            tree models
+        Y (Series): the actual attendance status
+        objective_fn: a function that takes the model's true positive, false positive, true
+                      negatives, false negatives as inputs and outputs a float value
+        num_trials (int): the number of trials to be conducted
+
+    Returns: a dictionary of the results of each of the four models
+
+    """
+    results = {}
+
+    lr_best_score, lr_best_params, lr_best_estimator = logistic_regression(linear_X, Y, objective_fn, num_trials)
+    results["Logistic Regression"] = (lr_best_score, lr_best_params, lr_best_estimator)
+
+    rf_best_score, rf_best_params, rf_best_estimator = random_forest(tree_X, Y, objective_fn, num_trials)
+    results["Random Forest"] = (rf_best_score, rf_best_params, rf_best_estimator)
+
+    hgb_best_score, hgb_best_params, hgb_best_estimator = hist_grad_boost(tree_X, Y, objective_fn, num_trials)
+    results["Histogram-based Gradient Boosting"] = (hgb_best_score, hgb_best_params, hgb_best_estimator)
+
+    xgb_best_score, xgb_best_params, xgb_best_estimator = x_grad_boost(tree_X, Y, objective_fn, num_trials)
+    results["Extreme Gradient Boosting"] = (xgb_best_score, xgb_best_params, xgb_best_estimator)
+
+    return results
+
+
+def logistic_regression(linear_X, Y, objective_fn, num_trials):
+    """
+
+    """
+
+
+
+def random_forest(tree_X, Y, objective_fn, num_trials):
+    """
+
+    """
+
+
+def hist_grad_boost(tree_X, Y, objective_fn, num_trials):
+    """
+
+    """
+
+
+
+def x_grad_boost(tree_X, Y, objective_fn, num_trials):
+    """
+
+    """
+
+
+
 def linear_model(X, Y, objective_fn, num_trials, SOMETHING):
     """
     Takes in the data and runs the linear logistic regression model with every possible
@@ -16,7 +77,7 @@ def linear_model(X, Y, objective_fn, num_trials, SOMETHING):
     Params:
         X (DataFrame): the 16 variables that are being considered to predict no-show
         Y (Series): the actual attendance status
-        objective_fn: a fucntion that takes the model's ( true pos, false pos, true neg, false neg)
+        objective_fn: a fucntion that takes the model's (true pos, false pos, true neg, false neg)
                         as input and outputs a float value
         num_trials (int): the number of trials to be conducted
         SOMETHING:
@@ -84,7 +145,7 @@ def tree_models(X, Y, objective_fn, num_trials):
         for _ in range(num_trials):
 
             # split the data and train it
-            train_X, train_Y, test_X, test_Y = split_data(X, Y)
+            train_X, test_X, train_Y, test_Y = split_data(X, Y)
             model.fit(train_X, train_Y)
 
             # evaluate the model and add the score to the total
@@ -121,29 +182,32 @@ def split_data(X, Y):
                 values for testing (test_X), and the attendance status for
                 those values (test_Y)
     """
-    # split the data into shows and no shows
-    show_X = X[Y == 0]
-    show_Y = Y[Y == 0]
-    no_show_X = X[Y == 1]
-    no_show_Y = Y[Y == 1]
+    # # split the data into shows and no shows
+    # show_X = X[Y == 0]
+    # show_Y = Y[Y == 0]
+    # no_show_X = X[Y == 1]
+    # no_show_Y = Y[Y == 1]
 
-    # find the minimum size of both
-    minimum = min(len(show_X), len(no_show_X))
+    # # find the minimum size of both
+    # minimum = min(len(show_X), len(no_show_X))
 
-    # randomly take the same amount of shows and no-shows
-    sampled_show_X = show_X.sample(minimum)
-    sampled_show_Y = show_Y[sampled_show_X.index]
-    sampled_no_show_X = no_show_X.sample(minimum)
-    sampled_no_show_Y = no_show_Y[sampled_no_show_X.index]
+    # # randomly take the same amount of shows and no-shows
+    # sampled_show_X = show_X.sample(minimum)
+    # sampled_show_Y = show_Y[sampled_show_X.index]
+    # sampled_no_show_X = no_show_X.sample(minimum)
+    # sampled_no_show_Y = no_show_Y[sampled_no_show_X.index]
 
-    # combine the show and no show back into one Series
-    balanced_X = pd.concat([sampled_show_X, sampled_no_show_X])
-    balanced_Y = pd.concat([sampled_show_Y, sampled_no_show_Y])
+    # # combine the show and no show back into one Series
+    # balanced_X = pd.concat([sampled_show_X, sampled_no_show_X])
+    # balanced_Y = pd.concat([sampled_show_Y, sampled_no_show_Y])
 
-    # use the balanced X and Y and split the data
-    train_X, test_X, train_Y, test_Y = train_test_split(balanced_X, balanced_Y)
+    # # use the balanced X and Y and split the data
+    # train_X, test_X, train_Y, test_Y = train_test_split(balanced_X, balanced_Y)
 
-    return train_X, train_Y, test_X, test_Y
+    # unbalanced data split
+    train_X, test_X, train_Y, test_Y = train_test_split(X, Y)
+
+    return train_X, test_X, train_Y, test_Y
 
 
 def evaluate_model(val_X, val_Y, objective_fn, model):
@@ -158,6 +222,7 @@ def evaluate_model(val_X, val_Y, objective_fn, model):
         model: the type of model used
 
     Returns: a float of the model's score under the given objective function
+                OR a dictionary of each measurement and their scores
     """
     # convert y values to a numpy array
     val_Y = val_Y.to_numpy()
@@ -185,30 +250,53 @@ def evaluate_model(val_X, val_Y, objective_fn, model):
 #######################################################################################################
 
 
+def get_all(tp, fp, tn, fn):
+    obj_fns = {"Accuracy": get_accuracy(), "Precision": get_precision(), "Recall": get_recall(), "F1 Score": get_f1_score,
+               "Balanced Accuracy": get_balanced_accuracy(), "Matthew's Correlation Coefficient": get_mcc()}
+    results = {}
+    for name, obj_fn in obj_fns.get_items():
+        results[name] = obj_fn(tp, fp, tn, fn)
+    return results
+
+
 def get_accuracy(tp, fp, tn, fn):
     if (tp + tn + fp + fn) == 0:
         return 0
-    else:
-        return (tp + tn)/(tp + tn + fp + fn)
+    return (tp + tn)/(tp + tn + fp + fn)
+
 
 def get_precision(tp, fp, tn, fn):
     if (tp + fp) == 0:
         return 0
-    else:
-        return tp / (tp + fp)
+    return tp / (tp + fp)
+
 
 def get_recall(tp, fp, tn, fn):
     if (tp + fn) == 0:
         return 0
-    else:
-        return tp / (tp + fn)
+    return tp / (tp + fn)
+
 
 def get_f1_score(tp, fp, tn, fn):
-    if (((tp + fp) == 0) or ((tp + fn) == 0)):
+    if (tp + fp == 0 or tp + fn == 0):
         return 0
     precision = tp / (tp + fp)
     recall = tp / (tp + fn)
     if (precision + recall) == 0:
         return 0
-    else:
-        return (2 * precision * recall) / (precision + recall)
+    return (2 * precision * recall) / (precision + recall)
+
+
+def get_balanced_accuracy(tp, fp, tn, fn):
+    if (tp + fn == 0 or tn + fp == 0):
+        return 0
+    sensitivity = tp / (tp + fn)
+    specificity = tn / (tn + fp)
+    return (sensitivity + specificity) / 2
+
+
+def get_mcc(tp, fp, tn, fn):
+    den = (tp + fp) * (tp + fn) * (tn + fp) * (tn + fn)
+    if den == 0:
+        return 0
+    return ((tp * tn) - (fp * fn)) / (den ** 0.5)
