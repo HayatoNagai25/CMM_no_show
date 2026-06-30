@@ -53,9 +53,6 @@ def plot_pr_auc(y_true, y_scores):
     plt.figure(figsize=(6, 5))
     plt.plot(recall, precision, label="PR Curve")
 
-    baseline = sum(y_test) / len(y_test)
-    plt.axhline(y=baseline, color="red", linestyle="--", label="Baseline")
-
     plt.xlabel("Recall")
     plt.ylabel("Precision")
     plt.title("Precision-Recall Curve")

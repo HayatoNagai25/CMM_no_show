@@ -1,170 +1,8 @@
-import numpy as np
-import random
-import pandas as pd
-from sklearn.model_selection import train_test_split
+from sklearn.model_selection import train_test_split, RandomizedSearchCV
+from sklearn.metrics import confusion_matrix, make_scorer
 from sklearn.linear_model import LogisticRegression
 from sklearn.ensemble import RandomForestClassifier, HistGradientBoostingClassifier
 from xgboost import XGBClassifier
-
-
-def find_best_models(linear_X, tree_X, Y, objective_fn, num_trials):
-    """
-    Takes in the data and runs the all four models with every possible combinatoon of each parameter
-
-    Params:
-        linear_X (DataFrame): the 16 variables that are being considered to predict no-show for
-                              linear models
-        tree_X (DataFrame): the 16 variables that are beign considered to predict no-show for
-                            tree models
-        Y (Series): the actual attendance status
-        objective_fn: a function that takes the model's true positive, false positive, true
-                      negatives, false negatives as inputs and outputs a float value
-        num_trials (int): the number of trials to be conducted
-
-    Returns: a dictionary of the results of each of the four models
-
-    """
-    results = {}
-
-    lr_best_score, lr_best_params, lr_best_estimator = logistic_regression(linear_X, Y, objective_fn, num_trials)
-    results["Logistic Regression"] = (lr_best_score, lr_best_params, lr_best_estimator)
-
-    rf_best_score, rf_best_params, rf_best_estimator = random_forest(tree_X, Y, objective_fn, num_trials)
-    results["Random Forest"] = (rf_best_score, rf_best_params, rf_best_estimator)
-
-    hgb_best_score, hgb_best_params, hgb_best_estimator = hist_grad_boost(tree_X, Y, objective_fn, num_trials)
-    results["Histogram-based Gradient Boosting"] = (hgb_best_score, hgb_best_params, hgb_best_estimator)
-
-    xgb_best_score, xgb_best_params, xgb_best_estimator = x_grad_boost(tree_X, Y, objective_fn, num_trials)
-    results["Extreme Gradient Boosting"] = (xgb_best_score, xgb_best_params, xgb_best_estimator)
-
-    return results
-
-
-def logistic_regression(linear_X, Y, objective_fn, num_trials):
-    """
-
-    """
-
-
-
-def random_forest(tree_X, Y, objective_fn, num_trials):
-    """
-
-    """
-
-
-def hist_grad_boost(tree_X, Y, objective_fn, num_trials):
-    """
-
-    """
-
-
-
-def x_grad_boost(tree_X, Y, objective_fn, num_trials):
-    """
-
-    """
-
-
-
-def linear_model(X, Y, objective_fn, num_trials, SOMETHING):
-    """
-    Takes in the data and runs the linear logistic regression model with every possible
-    combination of SOMETHING and outputs the best average score and the best model
-    given the objective function
-
-    Params:
-        X (DataFrame): the 16 variables that are being considered to predict no-show
-        Y (Series): the actual attendance status
-        objective_fn: a fucntion that takes the model's (true pos, false pos, true neg, false neg)
-                        as input and outputs a float value
-        num_trials (int): the number of trials to be conducted
-        SOMETHING:
-
-
-    Returns: (avg_score, best_model)
-                avg_score is the best average score determined by the objective function and
-                best_model is the best model
-    """
-    # initiate the total score variable
-    total_score = 0
-
-    # repeat for the number of trials specified
-    for _ in range(num_trials):
-
-        # split the data and train it
-        train_X, train_Y, test_X, test_Y = split_data(X, Y)
-        model = LogisticRegression()
-        model.fit(train_X, train_Y)
-
-        # evalulate the model and add the score to the total
-        score = evaluate_model(test_X, test_Y, objective_fn, model)
-        total_score += score
-
-    # calculate the average score
-    avg_score = total_score/num_trials
-
-    # find the best model
-    best_model = model.fit(X, Y)
-
-    return avg_score, best_model
-
-
-def tree_models(X, Y, objective_fn, num_trials):
-    """
-    Takes in the data and runs all three tree-based models with every possible combination
-    of SOMETHING and outputs the best average score and the best model given the objective
-    function for each model
-
-    Params:
-        X (DataFrame): the 16 variables that are being considered to predict no-show
-        Y (Series): the actual attendance status
-        objective_fn: a function that takes the model's (true pos, false pos, true neg, false neg)
-                        as input and ouputs a float value
-        num_trials (int): the number of trials to be conducted
-        SOMETHING:
-
-    Returns: (model_measurements, best_models)
-                model_measurements is a dictionary mapping each tree-based model to the best average
-                score determined by the objective function and best_models is a list of the best models
-    """
-    # define all three tree-based models
-    models = {"Random Forest": RandomForestClassifier(), "Histogram-Based Gradient Boosting": HistGradientBoostingClassifier(),
-              "Extreme Gradient Boosting": XGBClassifier()}
-    model_measurements = {}
-    best_models = []
-
-    # loop through all models and run each one
-    for name, model in models.items():
-
-        # initiate a total score variable
-        total_score = 0
-
-        # repeat for the number of trials specified
-        for _ in range(num_trials):
-
-            # split the data and train it
-            train_X, test_X, train_Y, test_Y = split_data(X, Y)
-            model.fit(train_X, train_Y)
-
-            # evaluate the model and add the score to the total
-            score = evaluate_model(test_X, test_Y, objective_fn, model)
-            total_score += score
-
-        # calculate the average score and record it
-        avg_score = total_score/num_trials
-        model_measurements[name] = avg_score
-
-        # find the best model and record it
-        best_models.append(model.fit(X, Y))
-
-    return model_measurements, best_models
-
-
-#######################################################################################################
-########################################## HELPER FUNCTIONS ###########################################
-#######################################################################################################
 
 
 def split_data(X, Y):
@@ -182,67 +20,212 @@ def split_data(X, Y):
                 values for testing (test_X), and the attendance status for
                 those values (test_Y)
     """
-    # # split the data into shows and no shows
-    # show_X = X[Y == 0]
-    # show_Y = Y[Y == 0]
-    # no_show_X = X[Y == 1]
-    # no_show_Y = Y[Y == 1]
-
-    # # find the minimum size of both
-    # minimum = min(len(show_X), len(no_show_X))
-
-    # # randomly take the same amount of shows and no-shows
-    # sampled_show_X = show_X.sample(minimum)
-    # sampled_show_Y = show_Y[sampled_show_X.index]
-    # sampled_no_show_X = no_show_X.sample(minimum)
-    # sampled_no_show_Y = no_show_Y[sampled_no_show_X.index]
-
-    # # combine the show and no show back into one Series
-    # balanced_X = pd.concat([sampled_show_X, sampled_no_show_X])
-    # balanced_Y = pd.concat([sampled_show_Y, sampled_no_show_Y])
-
-    # # use the balanced X and Y and split the data
-    # train_X, test_X, train_Y, test_Y = train_test_split(balanced_X, balanced_Y)
-
-    # unbalanced data split
-    train_X, test_X, train_Y, test_Y = train_test_split(X, Y)
+    # split the data
+    train_X, test_X, train_Y, test_Y = train_test_split(X, Y, stratify=Y)
 
     return train_X, test_X, train_Y, test_Y
 
 
-def evaluate_model(val_X, val_Y, objective_fn, model):
+def find_best_models(linear_X, tree_X, Y, objective_fn, num_trials):
+    """
+    Takes in the data and runs the all four models with every possible combinatoon of each parameter
+
+    Params:
+        linear_X (DataFrame): the 16 variables that are being considered to predict no-show for
+                              linear models
+        tree_X (DataFrame): the 16 variables that are beign considered to predict no-show for
+                            tree models
+        Y (Series): the actual attendance status
+        objective_fn: a function that takes the model's (true neg, false pos, false neg, true pos)
+                        as input and outputs a float value
+        num_trials (int): the number of trials to be conducted
+
+    Returns: a dictionary of the results of each of the four models
+
+    """
+    # create a results dictionary
+    results = {}
+
+    # compute the best logistic regression model and add to results
+    lr_model, lr_params, lr_score = logistic_regression(linear_X, Y, objective_fn, num_trials)
+    results["Logistic Regression"] = (lr_model, lr_params, lr_score)
+
+    # compute the best random forest model and add to results
+    rf_model, rf_params, rf_score = random_forest(tree_X, Y, objective_fn, num_trials)
+    results["Random Forest"] = (rf_model, rf_params, rf_score)
+
+    # compute the best histogram-based gradient boosting model and add to results
+    hgb_model, hgb_params, hgb_score = hist_grad_boost(tree_X, Y, objective_fn, num_trials)
+    results["Histogram-based Gradient Boosting"] = (hgb_model, hgb_params, hgb_score)
+
+    # compute the best extreme gradient boosting model and add to results
+    xgb_model, xgb_params, xgb_score = x_grad_boost(tree_X, Y, objective_fn, num_trials)
+    results["Extreme Gradient Boosting"] = (xgb_model, xgb_params, xgb_score)
+
+    return results
+
+
+#######################################################################################################
+########################################## HELPER FUNCTIONS ###########################################
+#######################################################################################################
+
+
+def evaluate_model(y_true, y_pred, objective_fn):
     """
     Evaluates the given model according to the provided objective function
 
     Params:
-        val_X (Series): data input to evaluate performance on
-        val_Y (Series): data output to evaluate performance on
-        objective_fn: a function that takes the model's (true pos, true neg, false pos, false neg)
+        y_true (Series): the actual y values
+        y_pred (Series): the predicted y values
+        objective_fn: a function that takes the model's (true neg, false pos, false neg, true pos)
                         as input and outputs a float value
-        model: the type of model used
 
     Returns: a float of the model's score under the given objective function
-                OR a dictionary of each measurement and their scores
     """
-    # convert y values to a numpy array
-    val_Y = val_Y.to_numpy()
+    # find the nubmer of tp, fp, tn, and fn
+    tn, fp, fn, tp = confusion_matrix(y_true, y_pred).ravel()
 
-    # uses the specified model to make predicted y values
-    prediction = model.predict(val_X)
-    tp, fp, tn, fn = 0, 0, 0, 0
+    return objective_fn(tn, fp, fn, tp)
 
-    # counts the number of tp, fp, tn, and fn
-    for i in range(len(prediction)):
-        if prediction[i] == 1 and val_Y[i] == 1:
-            tp += 1
-        if prediction[i] == 1 and val_Y[i] == 0:
-            fp += 1
-        if prediction[i] == 0 and val_Y[i] == 0:
-            tn += 1
-        if prediction[i] == 0 and val_Y[i] == 1:
-            fn += 1
 
-    return objective_fn(tp, fp, tn, fn)
+def search_model(val_X, val_Y, params, objective_fn, num_trials, model):
+    """
+    Finds the optimal parameters that gives the best score and creates a model based on these parameters
+
+    Params:
+        val_X (Series): data input to evaluate performance on
+        val_Y (Series): data output to evaluate performance on
+        params (list): all the variations in each parameter
+        objective_fn: a function that takes the model's (true neg, false pos, false neg, true pos)
+                        as input and outputs a float value
+        num_trials (int): the number of trials to be conducted
+        model: the type of model used
+
+        Returns: (search.best_estimator_, search.best_params_, search.best_score_)
+                    a tuple containing the best model, the parameters for the best model, and the best
+                    model's score
+    """
+    # creates the scorer
+    scorer = make_scorer(evaluate_model, objective_fn=objective_fn)
+
+    # uses randomized search CV to find the optimal parameter conditions
+    search = RandomizedSearchCV(model, param_distributions=params, n_iter=num_trials, scoring=scorer, n_jobs = -1, cv=5, random_state=42)
+
+    # uses the optimal model and fits to data
+    search.fit(val_X, val_Y)
+
+    return search.best_estimator_, search.best_params_, search.best_score_
+
+
+def logistic_regression(val_X, val_Y, objective_fn, num_trials):
+    """
+    Searches for the best logistic regression model given a set of differing
+    parameters and based on a score given by an objective function
+
+    Params:
+        val_X (DataFrame): the 16 variables that are being considered to predict no-show for
+                        linear models
+        val_Y (Series): the actual attendance status
+        objective_fn: a function that takes the model's (true neg, false pos, false neg, true pos)
+                        as input and outputs a float value
+        num_trials (int): the number of trials to be conducted
+
+    Returns: (best_model, parameters, score)
+                best_model is the best model given the set of parameters, and measured by the score
+    """
+    # the parameters to test
+    params = {"C": [0.01, 0.1, 1, 10, 100],
+              "class_weight": ["balanced", None, {0: 1, 1: 1}, {0: 1, 1: 2},
+                               {0: 1, 1: 3}, {0: 1, 1: 4}, {0: 1, 1: 5}]}
+
+    # finds the best model, its parameters, and its score
+    best_model, parameters, score = search_model(val_X, val_Y, params, objective_fn, num_trials, LogisticRegression())
+
+    return best_model, parameters, score
+
+
+def random_forest(val_X, val_Y, objective_fn, num_trials):
+    """
+    Searches for the best random forest regression model given a set of
+    differing parameters and based on a score given by an objective function
+
+    Params:
+        vall_X (DataFrame): the 16 variables that are being considered to predict no-show for
+                        linear models
+        val_Y (Series): the actual attendance status
+        objective_fn: a function that takes the model's (true neg, false pos, false neg, true pos)
+                        as input and outputs a float value
+        num_trials (int): the number of trials to be conducted
+
+    Returns: (best_model, parameters, score)
+                best_model is the best model given the set of parameters, and measured by the score
+    """
+    # the parameters to test
+    params = {"n_estimators": [100, 200, 300],
+              "max_depth": [None, 10, 20, 30],
+              "min_samples_leaf": [1, 5, 10],
+              "class_weight": ["balanced", "balanced_subsample", None]}
+
+    # finds the best model, its parameters, and its score
+    best_model, parameters, score = search_model(val_X, val_Y, params, objective_fn, num_trials, RandomForestClassifier())
+
+    return best_model, parameters, score
+
+
+def hist_grad_boost(val_X, val_Y, objective_fn, num_trials):
+    """
+    Searches for the best histogram-based gradient boosting model given a set
+    of differing parameters and based on a score given by an objective function
+
+    Params:
+        val_X (DataFrame): the 16 variables that are being considered to predict no-show for
+                        linear models
+        val_Y (Series): the actual attendance status
+        objective_fn: a function that takes the model's (true neg, false pos, false neg, true pos)
+                        as input and outputs a float value
+        num_trials (int): the number of trials to be conducted
+
+    Returns: (best_model, parameters, score)
+                best_model is the best model given the set of parameters, and measured by the score
+    """
+    # the parameters to test
+    params = {"learning_rate": [0.01, 0.05, 0.1, 0.3],
+              "max_iter": [100, 200, 300],
+              "max_depth": [None, 3, 9, 15],
+              "min_samples_leaf": [10, 20, 30]}
+
+    # finds the best model, its parameters, and its score
+    best_model, parameters, score = search_model(val_X, val_Y, params, objective_fn, num_trials, HistGradientBoostingClassifier())
+
+    return best_model, parameters, score
+
+
+def x_grad_boost(val_X, val_Y, objective_fn, num_trials):
+    """
+    Searches for the best extreme gradient boosting model given a set of
+    differing parameters and based on a score given by an objective function
+
+    Params:
+        val_X (DataFrame): the 16 variables that are being considered to predict no-show for
+                        linear models
+        val_Y (Series): the actual attendance status
+        objective_fn: a function that takes the model's (true neg, false pos, false neg, true pos)
+                        as input and outputs a float value
+        num_trials (int): the number of trials to be conducted
+
+    Returns: (best_model, parameters, score)
+                best_model is the best model given the set of parameters, and measured by the score
+    """
+    # the parameters to test
+    params = {"learning_rate": [0.01, 0.05, 0.1, 0.3],
+              "n_estimators": [100, 200,300],
+              "max_depth": [3, 6, 9],
+              "scale_pos_weight": [1, 2, 4]}
+
+    # finds the best model, its parameters, and its score
+    best_model, parameters, score = search_model(val_X, val_Y, params, objective_fn, num_trials, XGBClassifier())
+
+    return best_model, parameters, score
 
 
 #######################################################################################################
@@ -250,34 +233,25 @@ def evaluate_model(val_X, val_Y, objective_fn, model):
 #######################################################################################################
 
 
-def get_all(tp, fp, tn, fn):
-    obj_fns = {"Accuracy": get_accuracy(), "Precision": get_precision(), "Recall": get_recall(), "F1 Score": get_f1_score,
-               "Balanced Accuracy": get_balanced_accuracy(), "Matthew's Correlation Coefficient": get_mcc()}
-    results = {}
-    for name, obj_fn in obj_fns.get_items():
-        results[name] = obj_fn(tp, fp, tn, fn)
-    return results
-
-
-def get_accuracy(tp, fp, tn, fn):
+def get_accuracy(tn, fp, fn, tp):
     if (tp + tn + fp + fn) == 0:
         return 0
     return (tp + tn)/(tp + tn + fp + fn)
 
 
-def get_precision(tp, fp, tn, fn):
+def get_precision(tn, fp, fn, tp):
     if (tp + fp) == 0:
         return 0
     return tp / (tp + fp)
 
 
-def get_recall(tp, fp, tn, fn):
+def get_recall(tn, fp, fn, tp):
     if (tp + fn) == 0:
         return 0
     return tp / (tp + fn)
 
 
-def get_f1_score(tp, fp, tn, fn):
+def get_f1_score(tn, fp, fn, tp):
     if (tp + fp == 0 or tp + fn == 0):
         return 0
     precision = tp / (tp + fp)
@@ -287,7 +261,7 @@ def get_f1_score(tp, fp, tn, fn):
     return (2 * precision * recall) / (precision + recall)
 
 
-def get_balanced_accuracy(tp, fp, tn, fn):
+def get_balanced_accuracy(tn, fp, fn, tp):
     if (tp + fn == 0 or tn + fp == 0):
         return 0
     sensitivity = tp / (tp + fn)
@@ -295,7 +269,7 @@ def get_balanced_accuracy(tp, fp, tn, fn):
     return (sensitivity + specificity) / 2
 
 
-def get_mcc(tp, fp, tn, fn):
+def get_mcc(tn, fp, fn, tp):
     den = (tp + fp) * (tp + fn) * (tn + fp) * (tn + fn)
     if den == 0:
         return 0
