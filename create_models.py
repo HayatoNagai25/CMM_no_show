@@ -26,7 +26,7 @@ def split_data(X, Y):
     return train_X, test_X, train_Y, test_Y
 
 
-def find_best_models(linear_X, tree_X, Y, objective_fn, num_trials):
+def find_best_models(linear_X, tree_X, linear_Y, tree_Y, objective_fn, num_trials):
     """
     Takes in the data and runs the all four models with every possible combinatoon of each parameter
 
@@ -35,7 +35,8 @@ def find_best_models(linear_X, tree_X, Y, objective_fn, num_trials):
                               linear models
         tree_X (DataFrame): the 16 variables that are beign considered to predict no-show for
                             tree models
-        Y (Series): the actual attendance status
+        linear_Y (Series): the actual attendance status for linear models
+        tree_Y (Series): the actual attendance status for tree models
         objective_fn: a function that takes the model's (true neg, false pos, false neg, true pos)
                         as input and outputs a float value
         num_trials (int): the number of trials to be conducted
@@ -47,19 +48,19 @@ def find_best_models(linear_X, tree_X, Y, objective_fn, num_trials):
     results = {}
 
     # compute the best logistic regression model and add to results
-    lr_model, lr_params, lr_score = logistic_regression(linear_X, Y, objective_fn, num_trials)
+    lr_model, lr_params, lr_score = logistic_regression(linear_X, linear_Y, objective_fn, num_trials)
     results["Logistic Regression"] = (lr_model, lr_params, lr_score)
 
     # compute the best random forest model and add to results
-    rf_model, rf_params, rf_score = random_forest(tree_X, Y, objective_fn, num_trials)
+    rf_model, rf_params, rf_score = random_forest(tree_X, tree_Y, objective_fn, num_trials)
     results["Random Forest"] = (rf_model, rf_params, rf_score)
 
     # compute the best histogram-based gradient boosting model and add to results
-    hgb_model, hgb_params, hgb_score = hist_grad_boost(tree_X, Y, objective_fn, num_trials)
+    hgb_model, hgb_params, hgb_score = hist_grad_boost(tree_X, tree_Y, objective_fn, num_trials)
     results["Histogram-based Gradient Boosting"] = (hgb_model, hgb_params, hgb_score)
 
     # compute the best extreme gradient boosting model and add to results
-    xgb_model, xgb_params, xgb_score = x_grad_boost(tree_X, Y, objective_fn, num_trials)
+    xgb_model, xgb_params, xgb_score = x_grad_boost(tree_X, tree_Y, objective_fn, num_trials)
     results["Extreme Gradient Boosting"] = (xgb_model, xgb_params, xgb_score)
 
     return results

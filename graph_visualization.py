@@ -1,4 +1,3 @@
-import numpy as np
 import matplotlib.pyplot as plt
 from sklearn.metrics import roc_auc_score, roc_curve, precision_recall_curve, auc
 
