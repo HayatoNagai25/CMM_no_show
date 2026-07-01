@@ -10,8 +10,8 @@ from create_models import split_data, evaluate_model, find_best_models, get_accu
 
 
 # extracts data for both lienar and tree models
-linear_x, y = linear_data(simplify_data(load_data("data/data2025anon.csv")))
-tree_x, y = tree_data(simplify_data(load_data("data/data2025anon.csv")))
+linear_x, y = linear_data(simplify_data(load_data("data/df2023-2026_anon.csv")))
+tree_x, y = tree_data(simplify_data(load_data("data/df2023-2026_anon.csv")))
 
 # split both data types
 train_linear_x, test_linear_x, train_linear_y, test_linear_y = split_data(linear_x, y)
@@ -29,12 +29,12 @@ results = find_best_models(train_linear_x, train_tree_x, train_linear_y, train_t
 print(results)
 
 # find logistic regression model
-lin_model = results[0][0]
+lin_model = results["Logisitic Regression"][0]
 
 # predict and evaluate
 y_lin_pred = lin_model.predict(test_linear_x)
 
-print("Logisitc Regression Model")
+print("Logisitc Regression")
 print("Accuracy: ", evaluate_model(test_linear_y, y_lin_pred, get_accuracy))
 print("Precision: ", evaluate_model(test_linear_y, y_lin_pred, get_precision))
 print("Recall: ", evaluate_model(test_linear_y, y_lin_pred, get_recall))
@@ -43,13 +43,13 @@ print("Balanced Accuracy: ", evaluate_model(test_linear_y, y_lin_pred, get_balan
 print("MCC Score: ", evaluate_model(test_linear_y, y_lin_pred, get_mcc))
 
 # track names of tree models
-tree_names = ["Random Forest Model", "Histogram-Based Gradient Boosting Model", "Extreme Gradient Boosting Model"]
+tree_names = ["Random Forest", "Histogram-based Gradient Boosting", "Extreme Gradient Boosting"]
 
 # loops through all 3 tree-based models
 for i in range(1, 4):
 
     # find the current tree based model
-    model = results[i][0]
+    model = results[tree_names[i-1]][0]
 
     # predict and evaluate
     y_pred = model.predict(test_tree_x)

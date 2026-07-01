@@ -140,7 +140,7 @@ def logistic_regression(val_X, val_Y, objective_fn, num_trials):
                                {0: 1, 1: 3}, {0: 1, 1: 4}, {0: 1, 1: 5}]}
 
     # finds the best model, its parameters, and its score
-    best_model, parameters, score = search_model(val_X, val_Y, params, objective_fn, num_trials, LogisticRegression(random_state=42))
+    best_model, parameters, score = search_model(val_X, val_Y, params, objective_fn, num_trials, LogisticRegression(max_iter=1000, random_state=42))
 
     return best_model, parameters, score
 
