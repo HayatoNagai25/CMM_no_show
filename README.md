@@ -1,4 +1,4 @@
-# Predicting No-Shwos for HCUCH Medical Appointments
+# Predicting No-Shows for HCUCH Medical Appointments
 
 ## Overview
 
