@@ -1,5 +1,6 @@
+import numpy as np
 from sklearn.model_selection import train_test_split, RandomizedSearchCV
-from sklearn.metrics import confusion_matrix, make_scorer
+from sklearn.metrics import confusion_matrix, make_scorer, matthews_corrcoef
 from sklearn.linear_model import LogisticRegression
 from sklearn.ensemble import RandomForestClassifier, HistGradientBoostingClassifier
 from xgboost import XGBClassifier
@@ -283,7 +284,7 @@ def get_balanced_accuracy(tn, fp, fn, tp):
 
 
 def get_mcc(tn, fp, fn, tp):
-    den = (tp + fp) * (tp + fn) * (tn + fp) * (tn + fn)
+    den = float(tp + fp) * float(tp + fn) * float(tn + fp) * float(tn + fn)
     if den == 0:
         return 0
-    return ((tp * tn) - (fp * fn)) / (den ** 0.5)
+    return (float(tp * tn) - float(fp * fn)) / np.sqrt(den)
