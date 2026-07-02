@@ -1,5 +1,7 @@
+import pandas as pd
 import matplotlib.pyplot as plt
 import matplotlib.patches as patches
+from sklearn.inspection import permutation_importance
 import data_extraction
 import create_models
 # import graph_visualization
@@ -27,9 +29,17 @@ num_trials = 10
 results = find_best_models(train_linear_x, train_tree_x, train_linear_y, train_tree_y, objective_fn, num_trials)
 
 print(results)
+print()
 
 # find logistic regression model
-lin_model = results["Logisitic Regression"][0]
+lin_model = results["Logistic Regression"][0]
+
+# displays the influnece of each variable
+importance = pd.Series(lin_model.coef_[0], index=train_linear_x.columns).sort_values()
+
+# positive increases no-show probability, negative decreases no show probability
+print(importance)
+print()
 
 # predict and evaluate
 y_lin_pred = lin_model.predict(test_linear_x)
@@ -41,23 +51,41 @@ print("Recall: ", evaluate_model(test_linear_y, y_lin_pred, get_recall))
 print("F1 Score: ", evaluate_model(test_linear_y, y_lin_pred, get_f1_score))
 print("Balanced Accuracy: ", evaluate_model(test_linear_y, y_lin_pred, get_balanced_accuracy))
 print("MCC Score: ", evaluate_model(test_linear_y, y_lin_pred, get_mcc))
+print()
 
 # track names of tree models
 tree_names = ["Random Forest", "Histogram-based Gradient Boosting", "Extreme Gradient Boosting"]
 
 # loops through all 3 tree-based models
-for i in range(1, 4):
+for tree_name in tree_names:
 
     # find the current tree based model
-    model = results[tree_names[i-1]][0]
+    model = results[tree_name][0]
+
+    # finds importance for Random Forest
+    if tree_name == "Random Forest":
+        importance = pd.Series(model.feature_importances_, index=train_tree_x.columns).sort_values()
+
+    # finds importance for Histogram-based Gradient Boosting
+    elif tree_name == "Histogram-based Gradient Boosting":
+        result = permutation_importance(model, test_tree_x, test_tree_y, n_repeats=5, random_state=42)
+        importance = pd.Series(result.importances_mean, index=test_tree_x.columns).sort_values()
+
+    # finds importance for Extreme Gradient Boosting
+    elif tree_name == "Extreme Gradient Boosting":
+        importance = pd.Series(model.feature_importances_, index=train_tree_x.columns).sort_values()
+
+    print(importance)
+    print()
 
     # predict and evaluate
     y_pred = model.predict(test_tree_x)
 
-    print(tree_names[i-1])
+    print(tree_name)
     print("Accuracy: ", evaluate_model(test_tree_y, y_pred, get_accuracy))
     print("Precision: ", evaluate_model(test_tree_y, y_pred, get_precision))
     print("Recall: ", evaluate_model(test_tree_y, y_pred, get_recall))
     print("F1 Score: ", evaluate_model(test_tree_y, y_pred, get_f1_score))
     print("Balanced Accuracy: ", evaluate_model(test_tree_y, y_pred, get_balanced_accuracy))
     print("MCC Score: ", evaluate_model(test_tree_y, y_pred, get_mcc))
+    print()

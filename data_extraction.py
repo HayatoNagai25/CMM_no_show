@@ -15,7 +15,7 @@ def load_data(file_path):
 
 def simplify_data(df):
     """
-    Removes unnecessary data and reduces data from 51 to 17 categories
+    Removes unnecessary data and reduces data from 48 to 19 categories
 
     df: a DataFrame
 
@@ -23,32 +23,31 @@ def simplify_data(df):
     """
     # remove all 4 repeated columns
     duplicate_cols = [val for val in df.columns.tolist() if ".1" in val]
-    df = df.drop(duplicate_cols, axis = 1)
+    df = df.drop(duplicate_cols, axis=1)
 
-    # remove all 12 columns with trivial information
-    trivial_cols = ["AMB_ESTADO_HORA", "Cantidad", "AMB_NOMBRE_LUGAR", "AMB_NRO_BOX",
-                    "AMB_PROCEDIMIENTO", "AMB_TIPO_HORA", "Año_Ingreso", "AMB_SOBRECUPO",
-                    "AMB_USUARIO_SOBRECUPO", "AMB_FECHA_SOBRECUPO", "AMB_HORA_SOBRECUPO",
-                    "AMB_FEC_CREACION"]
-    df = df.drop(trivial_cols, axis = 1)
+    # remove all 11 columns with trivial information
+    trivial_cols = ["AMB_ESTADO_HORA", "Cantidad", "AMB_NOMBRE_LUGAR", "AMB_NRO_BOX", "AMB_PROCEDIMIENTO",
+                    "AMB_TIPO_HORA", "AMB_SOBRECUPO", "AMB_USUARIO_SOBRECUPO", "AMB_FECHA_SOBRECUPO",
+                    "AMB_HORA_SOBRECUPO", "AMB_FEC_CREACION"]
+    df = df.drop(trivial_cols, axis=1)
 
     # remove all 14 columns with redundant information
     redundant_cols = ["AG_HORA_ATEN", "nom_institucion", "AMB_COD_ESPECI", "AMB_COD_SUBESP",
                       "AMB_COD_LUGAR", "AMB_COD_CENTRO", "CodigoComuna", "cod_prestacion",
                       "Glosa_Ed", "Día_Ingreso", "AMB_MODALIDAD_ATENCION", "nom_especialidad",
                       "Día_ATEN", "AMB_HORA_CITA"]
-    df = df.drop(redundant_cols, axis = 1)
+    df = df.drop(redundant_cols, axis=1)
 
-    # rename all all the remaining 18 columns with their english translation
+    # rename all all the remaining 19 columns with their english translation
     df.rename(columns={"AG_AMB_FECHA_CITA": "Appointment Date", "AG_HORA_CITA": "Appointment Time",
                        "VER": "Attendance Status", "AG_AMB_FECHA_ATEN": "Visit Date",
                        "Mes_Ingreso": "Month of Entry", "AMB_DESC_ESPECI": "Speciality Description",
                        "AMB_DESC_SUBESP": "Subspeciality Description","Nacionalidad": "Nationality",
                        "FEC_NACIMIENTO": "Birthdate", "Sexo": "Sex", "Comuna": "Municipality",
                        "Prevision": "Insurance", "Edad_fecha_aten": "Age at Visit Date",
-                       "Glosa_Prestación": "Procedure Description",
-                       "AMB_NOMBRE_C": "Medical Center Name", "AMB_TIPO_ATENCION": "Type of Visit",
-                       "AMB_HORA_LLEGADA": "Arrival Time", "new_id": "New ID"}, inplace=True)
+                       "Glosa_Prestación": "Procedure Description", "AMB_NOMBRE_C": "Medical Center Name",
+                       "AMB_TIPO_ATENCION": "Type of Visit", "AMB_HORA_LLEGADA": "Arrival Time",
+                       "Año_Ingreso": "Year of Entry", "new_id": "New ID"}, inplace=True)
 
     # removes any row where appointment date is after visit date (useful later on)
     df["Appointment Date"] = pd.to_datetime(df["Appointment Date"], format="%d/%m/%Y")

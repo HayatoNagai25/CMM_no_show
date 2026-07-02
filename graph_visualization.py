@@ -58,3 +58,7 @@ def plot_pr_auc(y_true, y_scores):
     plt.legend(loc="Lower Left")
     plt.grid(True)
     plt.show()
+
+
+def plot_feature_importance():
+    pass
