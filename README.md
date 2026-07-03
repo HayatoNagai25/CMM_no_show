@@ -16,7 +16,7 @@ Explore the historical appointment data provided by HCUCH, characterize the NSP 
 
 The dataset contains anonymized ambulatory appointment records from HCUCH spanning 2023–2026. Each record represents a single appointment and includes information about the patient, the appointment, and their attendance status.
 
-After processing the data, the following 16 variables of interest are used for prediction:
+After processing the data, the following 14 variables of interest are used for prediction:
 
 | Variable | Description |
 |---|---|
@@ -31,9 +31,7 @@ After processing the data, the following 16 variables of interest are used for p
 | Nationality | Patient nationality |
 | Sex | Patient sex |
 | Municipality | Patient municipality of residence |
-| Insurance | Patient health insurance coverage |
 | Age | Patient age at time of visit |
-| Procedure Description | Type of medical procedure or service |
 | Hospital Location | Medical center where the appointment takes place |
 | Type of Visit | Institutional, private, or extra-staff appointment |
 
@@ -54,6 +52,7 @@ Models are compared using accuracy, precision, recall, F1-score, balanced accura
 ├── data/
 │   └── df2023-2026_anon.csv       # Anonymized appointment data
 ├── create_models.py               # Model training and evaluation
+├── data_analysis.py               # Analyze and interpret data
 ├── data_extraction.py             # Data loading, cleaning, and varaiable calculations
 ├── graph_visualization.py         # Plots all relevant graphs
 ├── main.py                        # Execute machine learning modeling
@@ -65,6 +64,9 @@ Models are compared using accuracy, precision, recall, F1-score, balanced accura
 
 **`create_models.py`**
 Handles model training, evaluation, and comparison. Loads the processed data from `data_extraction.py`, splits into train and test sets, fits each model, and evaluates performance using a configurable objective function.
+
+**`data_analysis.py`**
+Uses pandas to interpret the data and comprehend the correlations between each data entry. Separate from all other files and is only used to help better understand the data, not to develop the learning models.
 
 **`data_extraction.py`**
 Handles all data preprocessing. Loads the raw CSV file, removes irrelevant and redundant columns, engineers features from date and time columns, builds patient history features using patient IDs, and outputs a clean feature matrix ready for model training. Produces two versions of the data — one for tree-based models and one for logistic regression.
