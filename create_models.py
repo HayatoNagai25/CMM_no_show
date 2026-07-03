@@ -13,7 +13,7 @@ def split_data(X, Y):
     testing, and also removes year of entry from the X dataframe
 
     Params:
-        X (DataFrame): the 18 variables that are being considered to predict no-show and Year of Entry
+        X (DataFrame): the 14 variables that are being considered to predict no-show and Year of Entry
         Y (Series): the actual attendance status
 
     Returns: (train_X, train_Y, test_X, test_Y)
@@ -58,9 +58,9 @@ def find_best_models(linear_X, tree_X, linear_Y, tree_Y, objective_fn, num_trial
     Takes in the data and runs the all four models with every possible combinatoon of each parameter
 
     Params:
-        linear_X (DataFrame): the 18 variables that are being considered to predict no-show for
+        linear_X (DataFrame): the 14 variables that are being considered to predict no-show for
                               linear models
-        tree_X (DataFrame): the 18 variables that are beign considered to predict no-show for
+        tree_X (DataFrame): the 14 variables that are beign considered to predict no-show for
                             tree models
         linear_Y (Series): the actual attendance status for linear models
         tree_Y (Series): the actual attendance status for tree models
@@ -133,7 +133,7 @@ def logistic_regression(val_X, val_Y, objective_fn, num_trials):
     parameters and based on a score given by an objective function
 
     Params:
-        val_X (DataFrame): the 18 variables that are being considered to predict no-show for
+        val_X (DataFrame): the 14 variables that are being considered to predict no-show for
                         linear models
         val_Y (Series): the actual attendance status
         objective_fn: a function that takes the model's (true neg, false pos, false neg, true pos)
@@ -160,7 +160,7 @@ def random_forest(val_X, val_Y, objective_fn, num_trials):
     differing parameters and based on a score given by an objective function
 
     Params:
-        vall_X (DataFrame): the 18 variables that are being considered to predict no-show for
+        vall_X (DataFrame): the 14 variables that are being considered to predict no-show for
                         linear models
         val_Y (Series): the actual attendance status
         objective_fn: a function that takes the model's (true neg, false pos, false neg, true pos)
@@ -189,7 +189,7 @@ def hist_grad_boost(val_X, val_Y, objective_fn, num_trials):
     of differing parameters and based on a score given by an objective function
 
     Params:
-        val_X (DataFrame): the 18 variables that are being considered to predict no-show for
+        val_X (DataFrame): the 14 variables that are being considered to predict no-show for
                         linear models
         val_Y (Series): the actual attendance status
         objective_fn: a function that takes the model's (true neg, false pos, false neg, true pos)
@@ -218,7 +218,7 @@ def x_grad_boost(val_X, val_Y, objective_fn, num_trials):
     differing parameters and based on a score given by an objective function
 
     Params:
-        val_X (DataFrame): the 18 variables that are being considered to predict no-show for
+        val_X (DataFrame): the 14 variables that are being considered to predict no-show for
                         linear models
         val_Y (Series): the actual attendance status
         objective_fn: a function that takes the model's (true neg, false pos, false neg, true pos)
