@@ -247,10 +247,12 @@ def x_grad_boost(val_X, val_Y, objective_fn, num_trials):
 #######################################################################################################
 
 
-def get_accuracy(tn, fp, fn, tp):
-    if (tp + tn + fp + fn) == 0:
+def get_balanced_accuracy(tn, fp, fn, tp):
+    if (tp + fn == 0 or tn + fp == 0):
         return 0
-    return (tp + tn)/(tp + tn + fp + fn)
+    sensitivity = tp / (tp + fn)
+    specificity = tn / (tn + fp)
+    return (sensitivity + specificity) / 2
 
 
 def get_precision(tn, fp, fn, tp):
@@ -273,14 +275,6 @@ def get_f1_score(tn, fp, fn, tp):
     if (precision + recall) == 0:
         return 0
     return (2 * precision * recall) / (precision + recall)
-
-
-def get_balanced_accuracy(tn, fp, fn, tp):
-    if (tp + fn == 0 or tn + fp == 0):
-        return 0
-    sensitivity = tp / (tp + fn)
-    specificity = tn / (tn + fp)
-    return (sensitivity + specificity) / 2
 
 
 def get_mcc(tn, fp, fn, tp):

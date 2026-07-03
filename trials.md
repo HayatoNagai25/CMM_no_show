@@ -69,11 +69,10 @@ Outputed results containing all four model types, the importance of each varaibl
     Procedure Description_                                                22.229241
     Length: 187
 
-    Accuracy: 0.9990742291656293
+    Balanced Accuracy: 0.998889826347017
     Precision: 0.9966647718703959
     Recall: 0.9985877840413785
     F1 Score: 0.9976253512622215
-    Balanced Accuracy: 0.998889826347017
     MCC Score: nan
 
 - **Random Forest**
@@ -101,11 +100,10 @@ Outputed results containing all four model types, the importance of each varaibl
     Speciality Description       0.006112
     Insurance                    0.976260
 
-    Accuracy: 0.9989712399896784
+    Balanced Accuracy: 0.998609977580345
     Precision: 0.9967033668607115
     Recall: 0.9980182483872843
     F1 Score: 0.9973603742518883
-    Balanced Accuracy: 0.998609977580345
     MCC Score: 45.7913086000612
 
 - **Histogram Gradient Boosting**
@@ -133,11 +131,10 @@ Outputed results containing all four model types, the importance of each varaibl
     Procedure Description        1.542737e-01
     Insurance                    1.561243e-01
 
-    Accuracy: 0.9991896675826291
+    Balanced Accuracy: 0.9991707958519785
     Precision: 0.9967070554814772
     Recall: 0.9991398849305515
     F1 Score: 0.9979219874622707
-    Balanced Accuracy: 0.9991707958519785
     MCC Score: 103.54205598528588
 
 - **Extreme Gradient Boosting**
@@ -165,11 +162,10 @@ Outputed results containing all four model types, the importance of each varaibl
     Procedure Description        0.249674
     Insurance                    0.739192
 
-    Accuracy: 0.9990266956998058
+    Balanced Accuracy: 0.9987523614938685
     Precision: 0.9967043041323849
     Recall: 0.9983030162143314
     F1 Score: 0.9975030196041995
-    Balanced Accuracy: 0.9987523614938685
     MCC Score: nan
 
 **Error**
@@ -203,12 +199,11 @@ Changed the output to include plots and removed Insurance and Procedure Descript
     Subspeciality Description_CL-QUILIN: (S) KINESIOTERAPIA          3.137341
     Length: 159
 
-    Accuracy:  0.7401085121119798
-    Precision:  0.3764025403532276
-    Recall:  0.5094263962340908
-    F1 Score:  0.43292645283009557
-    Balanced Accuracy:  0.6526609661285363
-    MCC Score:  0.27443769258671347
+    Balanced Accuracy: 0.6526609661285363
+    Precision: 0.3764025403532276
+    Recall: 0.5094263962340908
+    F1 Score: 0.43292645283009557
+    MCC Score: 0.27443769258671347
 
     ROC AUC Score: 0.7406
 

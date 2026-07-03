@@ -7,7 +7,7 @@ import create_models
 import graph_visualization
 
 from data_extraction import load_data, simplify_data, tree_data, linear_data
-from create_models import split_data, evaluate_model, find_best_models, get_accuracy, get_precision, get_recall, get_f1_score, get_balanced_accuracy, get_mcc
+from create_models import split_data, evaluate_model, find_best_models, get_balanced_accuracy, get_precision, get_recall, get_f1_score, get_mcc
 from graph_visualization import plot_roc_auc, plot_pr_auc
 
 
@@ -28,11 +28,18 @@ num_trials = 10
 # find the best model for each of the four learning model
 results = find_best_models(train_linear_x, train_tree_x, train_linear_y, train_tree_y, objective_fn, num_trials)
 
-print(results)
+print("Logistic Regression")
 print()
 
 # find logistic regression model
 lin_model = results["Logistic Regression"][0]
+
+print("Model:", lin_model)
+print()
+print("Parameters:", results["Logistic Regression"][1])
+print()
+print("Score:", results["Logistic Regression"][2])
+print()
 
 # displays the influnece of each variable
 importance = pd.Series(lin_model.coef_[0], index=train_linear_x.columns).sort_values()
@@ -44,12 +51,11 @@ print()
 # predict and evaluate
 y_lin_pred = lin_model.predict(test_linear_x)
 
-print("Accuracy: ", evaluate_model(test_linear_y, y_lin_pred, get_accuracy))
-print("Precision: ", evaluate_model(test_linear_y, y_lin_pred, get_precision))
-print("Recall: ", evaluate_model(test_linear_y, y_lin_pred, get_recall))
-print("F1 Score: ", evaluate_model(test_linear_y, y_lin_pred, get_f1_score))
-print("Balanced Accuracy: ", evaluate_model(test_linear_y, y_lin_pred, get_balanced_accuracy))
-print("MCC Score: ", evaluate_model(test_linear_y, y_lin_pred, get_mcc))
+print("Balanced Accuracy:", evaluate_model(test_linear_y, y_lin_pred, get_balanced_accuracy))
+print("Precision:", evaluate_model(test_linear_y, y_lin_pred, get_precision))
+print("Recall:", evaluate_model(test_linear_y, y_lin_pred, get_recall))
+print("F1 Score:", evaluate_model(test_linear_y, y_lin_pred, get_f1_score))
+print("MCC Score:", evaluate_model(test_linear_y, y_lin_pred, get_mcc))
 print()
 
 # find the prediction probability
@@ -65,8 +71,18 @@ tree_names = ["Random Forest", "Histogram-based Gradient Boosting", "Extreme Gra
 # loops through all 3 tree-based models
 for tree_name in tree_names:
 
+    print(tree_name)
+
     # find the current tree based model
     model = results[tree_name][0]
+
+    print("Model:", model)
+    print()
+    print("Parameters:", results[tree_name][1])
+    print()
+    print("Score:", results[tree_name][2])
+    print()
+
 
     # finds importance for Random Forest
     if tree_name == "Random Forest":
@@ -87,12 +103,12 @@ for tree_name in tree_names:
     # predict and evaluate
     y_pred = model.predict(test_tree_x)
 
-    print("Accuracy: ", evaluate_model(test_tree_y, y_pred, get_accuracy))
-    print("Precision: ", evaluate_model(test_tree_y, y_pred, get_precision))
-    print("Recall: ", evaluate_model(test_tree_y, y_pred, get_recall))
-    print("F1 Score: ", evaluate_model(test_tree_y, y_pred, get_f1_score))
-    print("Balanced Accuracy: ", evaluate_model(test_tree_y, y_pred, get_balanced_accuracy))
-    print("MCC Score: ", evaluate_model(test_tree_y, y_pred, get_mcc))
+
+    print("Balanced Accuracy:", evaluate_model(test_tree_y, y_pred, get_balanced_accuracy))
+    print("Precision:", evaluate_model(test_tree_y, y_pred, get_precision))
+    print("Recall:", evaluate_model(test_tree_y, y_pred, get_recall))
+    print("F1 Score:", evaluate_model(test_tree_y, y_pred, get_f1_score))
+    print("MCC Score:", evaluate_model(test_tree_y, y_pred, get_mcc))
     print()
 
     # find the prediction probability
