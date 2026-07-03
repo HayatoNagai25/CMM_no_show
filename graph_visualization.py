@@ -4,11 +4,11 @@ from sklearn.metrics import roc_auc_score, roc_curve, precision_recall_curve, au
 
 def plot_roc_auc(y_true, y_scores):
     """
-
+    Plots the receiver operating characteristic (ROC) area under the curve graph
 
     Params:
-        y_true:
-        y_scores:
+        y_true (Series) : the actual attendance status
+        y_scores (Series): the probability of predicting no-show
 
     Returns: None (plots a ROC AUC graph)
     """
@@ -35,11 +35,11 @@ def plot_roc_auc(y_true, y_scores):
 
 def plot_pr_auc(y_true, y_scores):
     """
-
+    Plots the precision-recall (PR) area under the curve graph
 
     Params:
-        y_true:
-        y_scores:
+        y_true (Series): the actual attendance status
+        y_scores (Series): the probablity of predicting no-show
 
     Returns: None (plots a PR AUC graph)
     """

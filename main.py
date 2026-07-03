@@ -4,11 +4,11 @@ import matplotlib.patches as patches
 from sklearn.inspection import permutation_importance
 import data_extraction
 import create_models
-# import graph_visualization
+import graph_visualization
 
 from data_extraction import load_data, simplify_data, tree_data, linear_data
 from create_models import split_data, evaluate_model, find_best_models, get_accuracy, get_precision, get_recall, get_f1_score, get_balanced_accuracy, get_mcc
-# from graph_visualization import plot_roc_auc, plot_pr_auc
+from graph_visualization import plot_roc_auc, plot_pr_auc
 
 
 # extracts data for both lienar and tree models
@@ -44,7 +44,6 @@ print()
 # predict and evaluate
 y_lin_pred = lin_model.predict(test_linear_x)
 
-print("Logisitc Regression")
 print("Accuracy: ", evaluate_model(test_linear_y, y_lin_pred, get_accuracy))
 print("Precision: ", evaluate_model(test_linear_y, y_lin_pred, get_precision))
 print("Recall: ", evaluate_model(test_linear_y, y_lin_pred, get_recall))
@@ -52,6 +51,13 @@ print("F1 Score: ", evaluate_model(test_linear_y, y_lin_pred, get_f1_score))
 print("Balanced Accuracy: ", evaluate_model(test_linear_y, y_lin_pred, get_balanced_accuracy))
 print("MCC Score: ", evaluate_model(test_linear_y, y_lin_pred, get_mcc))
 print()
+
+# find the prediction probability
+y_lin_score = lin_model.predict_proba(test_linear_x)[:, 1]
+
+# plot roc graphs
+plot_roc_auc(test_linear_y, y_lin_score)
+plot_pr_auc(test_linear_y, y_lin_score)
 
 # track names of tree models
 tree_names = ["Random Forest", "Histogram-based Gradient Boosting", "Extreme Gradient Boosting"]
@@ -81,7 +87,6 @@ for tree_name in tree_names:
     # predict and evaluate
     y_pred = model.predict(test_tree_x)
 
-    print(tree_name)
     print("Accuracy: ", evaluate_model(test_tree_y, y_pred, get_accuracy))
     print("Precision: ", evaluate_model(test_tree_y, y_pred, get_precision))
     print("Recall: ", evaluate_model(test_tree_y, y_pred, get_recall))
@@ -89,3 +94,10 @@ for tree_name in tree_names:
     print("Balanced Accuracy: ", evaluate_model(test_tree_y, y_pred, get_balanced_accuracy))
     print("MCC Score: ", evaluate_model(test_tree_y, y_pred, get_mcc))
     print()
+
+    # find the prediction probability
+    y_score = model.predict_proba(test_tree_x)[:, 1]
+
+    # plot roc graphs
+    plot_roc_auc(test_tree_y, y_score)
+    plot_pr_auc(test_tree_y, y_score)
