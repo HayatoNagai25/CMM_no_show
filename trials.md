@@ -175,3 +175,69 @@ Outputed results containing all four model types, the importance of each varaibl
 **Error**
 
 MCC calculation couldn't be computed because of integer overflow
+
+## Third Trial
+
+**Output**
+
+Changed the output to include plots and removed Insurance and Procedure Description
+
+- **Logistic Regression**
+
+    Model: LogisticRegression(C=0.1, class_weight={0: 1, 1: 4}, max_iter=1000, random_state=42)
+
+    Parameters: 'class_weight': {0: 1, 1: 4}, 'C': 0.1
+
+    Score: 0.42804333611838885
+
+    Subspeciality Description_TRATAMIENTO ANTICOAGULANTE (T.A.C.)   -3.440762
+    Speciality Description_CENTRO DE VACUNAS                        -2.305398
+    Subspeciality Description_REUMATOLOGIA (S) CREA                 -2.131121
+    Subspeciality Description_PROCED (S) QUIMIOTERAPIA              -1.751524
+    Subspeciality Description_DENTAL: ODONTOLOGIA INTEGRAL          -1.299105
+                                                                    ...
+    Subspeciality Description_GINECOLOGIA GENERAL                    0.777914
+    Subspeciality Description_MEDICINA GENERAL HCUCH                 1.042415
+    Subspeciality Description_UROLOGIA ADULTO                        1.832624
+    Speciality Description_DENTO MAXILO FACIAL                       2.255928
+    Subspeciality Description_CL-QUILIN: (S) KINESIOTERAPIA          3.137341
+    Length: 159
+
+    Accuracy:  0.7401085121119798
+    Precision:  0.3764025403532276
+    Recall:  0.5094263962340908
+    F1 Score:  0.43292645283009557
+    Balanced Accuracy:  0.6526609661285363
+    MCC Score:  0.27443769258671347
+
+    ROC AUC Score: 0.7406
+
+- **Random Forest**
+
+    Model: RandomForestClassifier(class_weight='balanced_subsample', max_depth=30, min_samples_leaf=10, n_estimators=200, random_state=42)
+
+    Parameters: 'n_estimators': 200, 'min_samples_leaf': 10, 'max_features': 'sqrt', 'max_depth': 30, 'class_weight': 'balanced_subsample'
+
+    Score: 0.46210669029498314
+
+    *Error caused output to not appear*
+
+- **Histogram Gradient Boosting**
+
+    Model: HistGradientBoostingClassifier(learning_rate=0.3, max_depth=9, max_iter=200, max_leaf_nodes=62, min_samples_leaf=30, random_state=42)
+
+    Parameters: 'min_samples_leaf': 30, 'max_leaf_nodes': 62, 'max_iter': 200, 'max_depth': 9, 'learning_rate': 0.3
+
+    Score: 0.355917336078226
+
+    *Error caused output to not appear*
+
+- **Extreme Gradient Boosting**
+
+    Model: XGBClassifier(base_score=None, booster=None, callbacks=None, colsample_bylevel=None, colsample_bynode=None, colsample_bytree=0.9, device=None, early_stopping_rounds=None enable_categorical=False, eval_metric=None, feature_types=None, feature_weights=None, gamma=None, grow_policy=None, importance_type=None, interaction_constraints=None, learning_rate=0.05, max_bin=None, max_cat_threshold=None, max_cat_to_onehot=None, max_delta_step=None, max_depth=9, max_leaves=None, min_child_weight=None, missing=nan, monotone_constraints=None, multi_strategy=None, n_estimators=300, n_jobs=None, num_parallel_tree=None, ...)
+
+    Parameters: 'subsample': 1.0, 'scale_pos_weight': 4, 'n_estimators': 300, 'max_depth': 9, 'learning_rate': 0.05, 'colsample_bytree': 0.9
+
+    Score: 0.45963894229659696
+
+    *Error caused output to not appear*
