@@ -29,7 +29,7 @@ def plot_roc_auc(y_true, y_scores):
     plt.xlabel("False Positive Rate")
     plt.ylabel("True Positive Rate")
     plt.title("Receiver Operation Characteristic (ROC)")
-    plt.legend(loc="Lower Right")
+    plt.legend(loc="lower right")
     plt.show()
 
 
@@ -55,7 +55,7 @@ def plot_pr_auc(y_true, y_scores):
     plt.xlabel("Recall")
     plt.ylabel("Precision")
     plt.title("Precision-Recall Curve")
-    plt.legend(loc="Lower Left")
+    plt.legend(loc="lower left")
     plt.grid(True)
     plt.show()
 
