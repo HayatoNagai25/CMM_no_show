@@ -25,10 +25,10 @@ def simplify_data(df):
     duplicate_cols = [val for val in df.columns.tolist() if ".1" in val]
     df = df.drop(duplicate_cols, axis=1)
 
-    # remove all 11 columns with trivial information
+    # remove all 13 columns with trivial information
     trivial_cols = ["AMB_ESTADO_HORA", "Cantidad", "AMB_NOMBRE_LUGAR", "AMB_NRO_BOX", "AMB_PROCEDIMIENTO",
                     "AMB_TIPO_HORA", "AMB_SOBRECUPO", "AMB_USUARIO_SOBRECUPO", "AMB_FECHA_SOBRECUPO",
-                    "AMB_HORA_SOBRECUPO", "AMB_FEC_CREACION"]
+                    "AMB_HORA_SOBRECUPO", "AMB_FEC_CREACION", "Glosa_Prestación", "Prevision"]
     df = df.drop(trivial_cols, axis=1)
 
     # remove all 14 columns with redundant information
@@ -38,14 +38,13 @@ def simplify_data(df):
                       "Día_ATEN", "AMB_HORA_CITA"]
     df = df.drop(redundant_cols, axis=1)
 
-    # rename all all the remaining 19 columns with their english translation
+    # rename all the remaining 17 columns with their english translation
     df.rename(columns={"AG_AMB_FECHA_CITA": "Appointment Date", "AG_HORA_CITA": "Appointment Time",
                        "VER": "Attendance Status", "AG_AMB_FECHA_ATEN": "Visit Date",
                        "Mes_Ingreso": "Month of Entry", "AMB_DESC_ESPECI": "Speciality Description",
                        "AMB_DESC_SUBESP": "Subspeciality Description","Nacionalidad": "Nationality",
                        "FEC_NACIMIENTO": "Birthdate", "Sexo": "Sex", "Comuna": "Municipality",
-                       "Prevision": "Insurance", "Edad_fecha_aten": "Age at Visit Date",
-                       "Glosa_Prestación": "Procedure Description", "AMB_NOMBRE_C": "Medical Center Name",
+                       "Edad_fecha_aten": "Age at Visit Date", "AMB_NOMBRE_C": "Medical Center Name",
                        "AMB_TIPO_ATENCION": "Type of Visit", "AMB_HORA_LLEGADA": "Arrival Time",
                        "Año_Ingreso": "Year of Entry", "new_id": "New ID"}, inplace=True)
 
@@ -73,8 +72,7 @@ def linear_data(df):
     df["Appointment Time"], df["Arrival Time"], df["Month of Entry"] = encode_times_month(df["Appointment Time"], df["Arrival Time"], df["Month of Entry"])
 
     # shorten larger categories into 20 unique categories and an OTHER category
-    large_categories = ["Speciality Description", "Subspeciality Description",
-                        "Municipality", "Procedure Description"]
+    large_categories = ["Speciality Description", "Subspeciality Description", "Municipality"]
     for category in large_categories:
         top_n = df[category].value_counts().index[:20]
         df[category] = df[category].where(df[category].isin(top_n), "OTHER")
@@ -126,8 +124,7 @@ def tree_data(df):
     df["Appointment Time"], df["Arrival Time"], df["Month of Entry"] = encode_times_month(df["Appointment Time"], df["Arrival Time"], df["Month of Entry"])
 
     # shorten larger categories into 20 unique categories and an OTHER category
-    large_categories = ["Speciality Description", "Subspeciality Description",
-                        "Municipality", "Procedure Description"]
+    large_categories = ["Speciality Description", "Subspeciality Description", "Municipality"]
     for category in large_categories:
         n = df[category].value_counts().index[:20]
         df[category] = df[category].where(df[category].isin(n), "OTHER")
@@ -152,7 +149,7 @@ def tree_data(df):
 
     # use ordinal encoding to convert strings to ints
     categories = ["Speciality Description", "Subspeciality Description", "Nationality", "Sex", "Municipality",
-                  "Day of the Week", "Insurance", "Procedure Description", "Medical Center Name", "Type of Visit"]
+                  "Day of the Week", "Medical Center Name", "Type of Visit"]
     encoder = OrdinalEncoder(handle_unknown="use_encoded_value", unknown_value=-1)
     df[categories] = encoder.fit_transform(df[categories])
 
