@@ -1,14 +1,10 @@
-import pandas as pd
-import matplotlib.pyplot as plt
-import matplotlib.patches as patches
-from sklearn.inspection import permutation_importance
 import data_extraction
 import create_models
 import graph_visualization
 
 from data_extraction import load_data, simplify_data, tree_data, linear_data
 from create_models import split_data, evaluate_model, find_best_models, get_balanced_accuracy, get_precision, get_recall, get_f1_score, get_mcc
-from graph_visualization import plot_roc_auc, plot_pr_auc
+from graph_visualization import plot_confusion_matrix, plot_roc_auc, plot_pr_auc, plot_feature_importance
 
 
 # extracts data for both lienar and tree models
@@ -41,13 +37,6 @@ print()
 print("Score:", results["Logistic Regression"][2])
 print()
 
-# displays the influnece of each variable
-importance = pd.Series(lin_model.coef_[0], index=train_linear_x.columns).sort_values()
-
-# positive increases no-show probability, negative decreases no show probability
-print(importance)
-print()
-
 # predict and evaluate
 y_lin_pred = lin_model.predict(test_linear_x)
 
@@ -61,9 +50,12 @@ print()
 # find the prediction probability
 y_lin_score = lin_model.predict_proba(test_linear_x)[:, 1]
 
-# plot roc graphs
-plot_roc_auc(test_linear_y, y_lin_score)
-plot_pr_auc(test_linear_y, y_lin_score)
+# plot graphs
+plot_confusion_matrix(test_linear_y, y_lin_pred, "Logistic Regression")
+plot_roc_auc(test_linear_y, y_lin_score, "Logistic Regression")
+plot_pr_auc(test_linear_y, y_lin_score, "Logistic Regression")
+plot_feature_importance(train_linear_x, train_tree_x, test_tree_x, test_tree_y, "Logistic Regression", lin_model)
+
 
 # track names of tree models
 tree_names = ["Random Forest", "Histogram-based Gradient Boosting", "Extreme Gradient Boosting"]
@@ -83,23 +75,6 @@ for tree_name in tree_names:
     print("Score:", results[tree_name][2])
     print()
 
-
-    # finds importance for Random Forest
-    if tree_name == "Random Forest":
-        importance = pd.Series(model.feature_importances_, index=train_tree_x.columns).sort_values()
-
-    # finds importance for Histogram-based Gradient Boosting
-    elif tree_name == "Histogram-based Gradient Boosting":
-        result = permutation_importance(model, test_tree_x, test_tree_y, n_repeats=5, random_state=42)
-        importance = pd.Series(result.importances_mean, index=test_tree_x.columns).sort_values()
-
-    # finds importance for Extreme Gradient Boosting
-    elif tree_name == "Extreme Gradient Boosting":
-        importance = pd.Series(model.feature_importances_, index=train_tree_x.columns).sort_values()
-
-    print(importance)
-    print()
-
     # predict and evaluate
     y_pred = model.predict(test_tree_x)
 
@@ -114,6 +89,8 @@ for tree_name in tree_names:
     # find the prediction probability
     y_score = model.predict_proba(test_tree_x)[:, 1]
 
-    # plot roc graphs
-    plot_roc_auc(test_tree_y, y_score)
-    plot_pr_auc(test_tree_y, y_score)
+    # plot graphs
+    plot_confusion_matrix(test_tree_y, y_pred, tree_name)
+    plot_roc_auc(test_tree_y, y_score, tree_name)
+    plot_pr_auc(test_tree_y, y_score, tree_name)
+    plot_feature_importance(train_linear_x, train_tree_x, test_tree_x, test_tree_y, tree_name, model)
