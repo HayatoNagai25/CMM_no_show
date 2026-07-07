@@ -19,7 +19,7 @@ train_tree_x, test_tree_x, train_tree_y,  test_tree_y = split_data(tree_x, y)
 objective_fn = get_f1_score
 
 # define the number of trials
-num_trials = 10
+num_trials = 5
 
 # find the best model for each of the four learning model
 results = find_best_models(train_linear_x, train_tree_x, train_linear_y, train_tree_y, objective_fn, num_trials)
