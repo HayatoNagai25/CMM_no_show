@@ -44,7 +44,7 @@ Four machine learning models are trained and evaluated to identify the best pred
 - **Histogram Gradient Boosting** — fast gradient boosted trees
 - **XGBoost** — gradient boosted trees
 
-Models are compared using accuracy, precision, recall, F1-score, balanced accuracy, Matthews Correlation Coefficient, and ROC-AUC.
+Models are compared using balanced accuracy, precision, recall, F1-score, Matthews Correlation Coefficient score, Confusion Matrices, Receiver Operating Characteristic AUC graphs, Precision-Recall AUC graphs, and Feature Importance Bar graph,
 
 ## Project Structure
 
@@ -69,10 +69,10 @@ Handles model training, evaluation, and comparison. Loads the processed data fro
 Uses pandas to interpret the data and comprehend the correlations between each data entry. Separate from all other files and is only used to help better understand the data, not to develop the learning models.
 
 **`data_extraction.py`**
-Handles all data preprocessing. Loads the raw CSV file, removes irrelevant and redundant columns, engineers features from date and time columns, builds patient history features using patient IDs, and outputs a clean feature matrix ready for model training. Produces two versions of the data — one for tree-based models and one for logistic regression.
+Handles all the data preprocessing. Loads the raw CSV file, removes irrelevant and redundant columns, engineers features from date and time columns, builds patient history features using patient IDs, and outputs a clean feature matrix ready for model training. Produces two versions, with one for the linear logistic regression model, and the other for the three tree models.
 
 **`graph_visualization`**
-Handles the plotting of the Receiver Operating Characteristic (ROC) based Area Under the Curve (AUC) graph and the Precision-Recall (PR) based Area Under the Curve (AUC) graph.
+Handles the plotting of the Confusion Matrix, the Receiver Operating Characteristic (ROC) based Area Under the Curve (AUC) graph, the Precision-Recall (PR) based Area Under the Curve (AUC) graph, and the Feature Importance Bar graph.
 
 **`main.py`**
-Incorporates all the functions from `create_models`, `data_extraction`, amd `graph_visualization` in order to process the data, intepret it, split it, fit it into each of the four models, evaluate the performance, and then print visuals of each model's effectiveness.
+Incorporates all the functions from `create_models`, `data_extraction`, amd `graph_visualization` in order to process the data, intepret it, split it, fit it into each of the four models, evaluate its performance, and then print visuals of each model's effectiveness.
