@@ -22,9 +22,10 @@ def plot_confusion_matrix(y_true, y_pred, name):
     # displays the confusion matrix
     disp = ConfusionMatrixDisplay(confusion_matrix=cm, display_labels=["Show", "No-Show"])
     disp.plot()
+    plt.figure(figsize=(6,6))
     plt.title(name + " Confusion Matrix")
-    plt.xlabel("True")
-    plt.ylabel("Predicted")
+    plt.xlabel("Predicted")
+    plt.ylabel("True")
     plt.show()
 
 
@@ -44,20 +45,17 @@ def plot_roc_auc(y_true, y_scores, name):
 
     print(f"ROC AUC Score: {auc_score:.4f}")
 
-    # computes the receiver operation characteristic
+    # computes the receiver operating characteristic
     fpr, tpr, _ = roc_curve(y_true, y_scores)
 
-    # computes area under the ROC graph
-    _ = auc(fpr, tpr)
-
     plt.figure(figsize=(8,6))
-    plt.plot(fpr, tpr, color="blue", lw=2, label="ROC Curve")
+    plt.plot(fpr, tpr, color="blue", lw=2, label=f"ROC Curve (AUC = {auc_score:.3f})")
     plt.plot([0, 1], [0, 1], color="gray", linestyle="--", label="Random Guessing")
     plt.xlim([0.0, 1.0])
     plt.ylim([0.0, 1.0])
     plt.xlabel("False Positive Rate")
     plt.ylabel("True Positive Rate")
-    plt.title(name + " Receiver Operation Characteristic (ROC)")
+    plt.title(name + " Receiver Operating Characteristic (ROC)")
     plt.legend(loc="lower right")
     plt.show()
 
@@ -81,8 +79,8 @@ def plot_pr_auc(y_true, y_scores, name):
 
     print(f"PR AUC Score: {pr_auc}")
 
-    plt.figure(figsize=(6, 5))
-    plt.plot(recall, precision, label="PR Curve")
+    plt.figure(figsize=(8,6))
+    plt.plot(recall, precision, label=f"PR Curve (AUC = {pr_auc:.3f})")
     plt.xlabel("Recall")
     plt.ylabel("Precision")
     plt.title(name + " Precision-Recall Curve")
@@ -112,9 +110,7 @@ def plot_feature_importance(train_linear_x, train_tree_x, test_tree_x, test_tree
         importance = pd.Series(model.coef_[0], index=train_linear_x.columns).sort_values()
 
         # gets the 20 most influential values
-        top_20 = importance.reindex(importance.abs().sort_values(ascending=False).index).head(20)
-
-        top_20.plot.barh(figsize=(8,6))
+        top_20 = importance.reindex(importance.abs().sort_values(ascending=False).index).head(20).sort_values()
 
     elif name == "Random Forest":
 
@@ -123,8 +119,6 @@ def plot_feature_importance(train_linear_x, train_tree_x, test_tree_x, test_tree
 
         # gets the 20 most infulential values
         top_20 = importance.sort_values(ascending=False).head(20)
-
-        top_20.plot.barh(figsize=(8, 6))
 
     elif name == "Histogram-based Gradient Boosting":
 
@@ -135,8 +129,6 @@ def plot_feature_importance(train_linear_x, train_tree_x, test_tree_x, test_tree
         # gets the 20 most influential values
         top_20 = importance.sort_values(ascending=False).head(20)
 
-        top_20.plot.barh(figsize=(8, 6))
-
     elif name == "Extreme Gradient Boosting":
 
         # finds the feature importance for Extreme Gradient Boosting
@@ -145,9 +137,8 @@ def plot_feature_importance(train_linear_x, train_tree_x, test_tree_x, test_tree
         # gets the 20 most influential values
         top_20 = importance.sort_values(ascending=False).head(20)
 
-        top_20.plot.barh(figsize=(8, 6))
-
-    plt.gca().invert_yaxis
+    top_20.plot.barh(figsize=(10,7))
+    plt.gca().invert_yaxis()
     plt.title(name + " Feature Importance")
     plt.xlabel("Importance")
     plt.ylabel("Most Important Features")

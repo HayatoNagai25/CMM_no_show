@@ -1,6 +1,6 @@
 import numpy as np
-from sklearn.model_selection import train_test_split, RandomizedSearchCV
-from sklearn.metrics import confusion_matrix, make_scorer, matthews_corrcoef
+from sklearn.model_selection import RandomizedSearchCV
+from sklearn.metrics import confusion_matrix, make_scorer
 from sklearn.linear_model import LogisticRegression
 from sklearn.ensemble import RandomForestClassifier, HistGradientBoostingClassifier
 from xgboost import XGBClassifier
@@ -33,24 +33,6 @@ def split_data(X, Y):
     test_X = test_X.drop("Year of Entry", axis=1)
 
     return train_X, test_X, train_Y, test_Y
-
-
-def evaluate_model(y_true, y_pred, objective_fn):
-    """
-    Evaluates the given model according to the provided objective function
-
-    Params:
-        y_true (Series): the actual y values
-        y_pred (Series): the predicted y values
-        objective_fn: a function that takes the model's (true neg, false pos, false neg, true pos)
-                        as input and outputs a float value
-
-    Returns: a float of the model's score under the given objective function
-    """
-    # find the nubmer of tp, fp, tn, and fn
-    tn, fp, fn, tp = confusion_matrix(y_true, y_pred).ravel()
-
-    return objective_fn(tn, fp, fn, tp)
 
 
 def find_best_models(linear_X, tree_X, linear_Y, tree_Y, objective_fn, num_trials):
@@ -91,6 +73,50 @@ def find_best_models(linear_X, tree_X, linear_Y, tree_Y, objective_fn, num_trial
     results["Extreme Gradient Boosting"] = (xgb_model, xgb_params, xgb_score)
 
     return results
+
+
+def print_stats(results, test_x, test_y, name):
+    """
+    Prints the name of the model, its optimal model, its parameters, its score from the
+    objective function, and the scores for all the objective functions on the test set
+
+    Params:
+        results (dictionary): the model, its best parameters, and its score
+        test_x (DataFrame): the test split of the data
+        test_y (Series): the test split of the attendance status
+        name (string): the name of the model
+
+    Returns: (model, y_pred)
+                model is the type of model used and y_pred is the
+                predicted attendance status for the test split
+    """
+    print(name)
+    print()
+
+    # find the model
+    model = results[name][0]
+
+    print("Model:", model)
+    print()
+    print("Parameters:", results[name][1])
+    print()
+    print("Score:", results[name][2])
+    print()
+
+    # predict and evaluate
+    y_pred = model.predict(test_x)
+
+    print("Balanced Accuracy:", evaluate_model(test_y, y_pred, get_balanced_accuracy))
+    print("Precision:", evaluate_model(test_y, y_pred, get_precision))
+    print("Recall:", evaluate_model(test_y, y_pred, get_recall))
+    print("F1 Score:", evaluate_model(test_y, y_pred, get_f1_score))
+    print("MCC Score:", evaluate_model(test_y, y_pred, get_mcc))
+    print()
+
+    print("=" * 80)
+    print()
+
+    return model, y_pred
 
 
 #######################################################################################################
@@ -240,6 +266,24 @@ def x_grad_boost(val_X, val_Y, objective_fn, num_trials):
     best_model, parameters, score = search_model(val_X, val_Y, params, objective_fn, num_trials, XGBClassifier(random_state=42))
 
     return best_model, parameters, score
+
+
+def evaluate_model(y_true, y_pred, objective_fn):
+    """
+    Evaluates the given model according to the provided objective function
+
+    Params:
+        y_true (Series): the actual y values
+        y_pred (Series): the predicted y values
+        objective_fn: a function that takes the model's (true neg, false pos, false neg, true pos)
+                        as input and outputs a float value
+
+    Returns: a float of the model's score under the given objective function
+    """
+    # find the nubmer of tp, fp, tn, and fn
+    tn, fp, fn, tp = confusion_matrix(y_true, y_pred).ravel()
+
+    return objective_fn(tn, fp, fn, tp)
 
 
 #######################################################################################################
