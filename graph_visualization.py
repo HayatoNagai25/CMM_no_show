@@ -19,13 +19,14 @@ def plot_confusion_matrix(y_true, y_pred, name):
     # find the tp, fp, fn, tn
     cm = confusion_matrix(y_true, y_pred)
 
+    # sets the size of the figure
+    _, ax = plt.subplots(figsize=(6,6))
+
     # displays the confusion matrix
     disp = ConfusionMatrixDisplay(confusion_matrix=cm, display_labels=["Show", "No-Show"])
-    disp.plot()
-    plt.figure(figsize=(6,6))
-    plt.title(name + " Confusion Matrix")
-    plt.xlabel("Predicted")
-    plt.ylabel("True")
+    disp.plot(ax=ax)
+    ax.set_title(name + " Confusion Matrix")
+    plt.tight_layout()
     plt.show()
 
 
