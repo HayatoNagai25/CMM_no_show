@@ -7,12 +7,9 @@ from create_models import split_data, find_best_models, print_stats, get_balance
 from graph_visualization import plot_confusion_matrix, plot_roc_auc, plot_pr_auc, plot_feature_importance
 
 
-# load the data frame
-df = simplify_data(load_data("data/df2023-2026_anon.csv"))
-
 # extracts data for both lienar and tree models
-linear_x, y = linear_data(df)
-tree_x, y = tree_data(df)
+linear_x, y = linear_data(simplify_data(load_data("data/df2023-2026_anon.csv")))
+tree_x, y = tree_data(simplify_data(load_data("data/df2023-2026_anon.csv")))
 
 # split both data types
 train_linear_x, test_linear_x, train_linear_y, test_linear_y = split_data(linear_x, y)

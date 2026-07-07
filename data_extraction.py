@@ -99,13 +99,19 @@ def linear_data(df):
                                  bins=[-1, 0, 10, 50, np.inf],
                                  labels=["Same Day", "Short", "Medium", "Long"]).astype(str)
 
+    # save year before encoding
+    year = df["Year of Entry"].copy()
+
     # remove the 8 columns that won't be used
     used_cols = ["Appointment Date", "Appointment Time", "Attendance Status", "Visit Date",
-                 "Birthdate", "Age at Visit Date", "Arrival Time", "New ID"]
+                 "Birthdate", "Age at Visit Date", "Arrival Time", "Year of Entry", "New ID"]
     df = df.drop(used_cols, axis = 1)
 
     # use one-hot encoding to convert strings to ints
     df = pd.get_dummies(df)
+
+    # add non-encoded year
+    df["Year of Entry"] = year
 
     return df, attendance_status
 
@@ -142,16 +148,21 @@ def tree_data(df):
     df["Time"] = df["Appointment Time"]
     df["Age"] = df["Age at Visit Date"]
 
+    # save year before encoding
+    year = df["Year of Entry"].copy()
+
     # remove the 8 columns that won't be used
     used_cols = ["Appointment Date", "Appointment Time", "Attendance Status", "Visit Date",
-                 "Birthdate", "Age at Visit Date", "Arrival Time", "New ID"]
+                 "Birthdate", "Age at Visit Date", "Arrival Time","Year of Entry", "New ID"]
     df = df.drop(used_cols, axis = 1)
 
     # use ordinal encoding to convert strings to ints
-    categories = ["Speciality Description", "Subspeciality Description", "Nationality", "Sex", "Municipality",
-                  "Day of the Week", "Medical Center Name", "Type of Visit"]
+    categories = ["Speciality Description", "Subspeciality Description", "Nationality",
+                  "Sex", "Municipality", "Medical Center Name", "Type of Visit"]
     encoder = OrdinalEncoder(handle_unknown="use_encoded_value", unknown_value=-1)
     df[categories] = encoder.fit_transform(df[categories])
+
+    df["Year of Entry"] = year
 
     return df, attendance_status
 
