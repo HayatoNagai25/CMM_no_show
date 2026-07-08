@@ -47,7 +47,7 @@ print()
 
 lin_model = results["Logistic Regression"][0]
 
-y_lin_score = lin_model.predict_prob(test_linear_x)[:, 1]
+y_lin_score = lin_model.predict_proba(test_linear_x)[:, 1]
 
 best_threshold = 0.5
 best_f1 = -1
@@ -99,7 +99,7 @@ for tree_name in tree_names:
 
     model = results[tree_name][0]
 
-    y_score = model.predict_prob(test_tree_x)[:, 1]
+    y_score = model.predict_proba(test_tree_x)[:, 1]
 
     best_threshold = 0.5
     best_f1 = -1
