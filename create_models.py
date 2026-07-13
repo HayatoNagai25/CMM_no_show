@@ -113,9 +113,6 @@ def print_stats(results, test_x, test_y, name):
     print("MCC Score:", evaluate_model(test_y, y_pred, get_mcc))
     print()
 
-    print("=" * 80)
-    print()
-
     return model, y_pred
 
 
