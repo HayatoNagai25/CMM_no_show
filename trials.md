@@ -239,91 +239,162 @@ Changed the output to include plots and removed Insurance and Procedure Descript
 
 ## Fourth Trial
 
+**Output**
+
+Optimized threshold with a range from 0.05 to 0.96, incremented by 0.05
+
 Objective Function: F1 Score
 
-Logistic Regression
+- **Logistic Regression**
 
-Model: LogisticRegression(C=10, class_weight={0: 1, 1: 4}, max_iter=1000,
-                   random_state=42)
+    Model: LogisticRegression(C=10, class_weight={0: 1, 1: 4}, max_iter=1000, random_state=42)
 
-Parameters: {'class_weight': {0: 1, 1: 4}, 'C': 10}
+    Parameters: {'class_weight': {0: 1, 1: 4}, 'C': 10}
 
-Score: 0.42796703838211686
+    Score: 0.42796703838211686
 
-Balanced Accuracy: 0.6526203551560759
-Precision: 0.3759775459044844
-Recall: 0.5099087580635788
-F1 Score: 0.4328190708744929
-MCC Score: 0.2741820101794323
+    Balanced Accuracy: 0.6526203551560759
+    Precision: 0.3759775459044844
+    Recall: 0.5099087580635788
+    F1 Score: 0.4328190708744929
+    MCC Score: 0.2741820101794323
 
-================================================================================
-
-ROC AUC Score: 0.7405
-PR AUC Score: 0.4471214070485371
-Random Forest
-
-Model: RandomForestClassifier(class_weight='balanced_subsample', max_features=None,
-                       min_samples_leaf=10, random_state=42)
-
-Parameters: {'n_estimators': 100, 'min_samples_leaf': 10, 'max_features': None, 'max_depth': None, 'class_weight': 'balanced_subsample'}
-
-Score: 0.4473705692633168
-
-Balanced Accuracy: 0.6507723249298547
-Precision: 0.461598891237841
-Recall: 0.4200209217179055
-F1 Score: 0.43982947958410545
-MCC Score: 0.3127297564894693
+    ROC AUC Score: 0.7405
+    PR AUC Score: 0.4471214070485371
 
 ================================================================================
 
-ROC AUC Score: 0.7569
-PR AUC Score: 0.5045214224741926
-Histogram-based Gradient Boosting
+- **Random Forest**
 
-Model: HistGradientBoostingClassifier(learning_rate=0.3, max_depth=9, max_iter=200,
-                               max_leaf_nodes=62, min_samples_leaf=30,
-                               random_state=42)
+    Model: RandomForestClassifier(class_weight='balanced_subsample', max_features=None, min_samples_leaf=10, random_state=42)
 
-Parameters: {'min_samples_leaf': 30, 'max_leaf_nodes': 62, 'max_iter': 200, 'max_depth': 9, 'learning_rate': 0.3}
+    Parameters: {'n_estimators': 100, 'min_samples_leaf': 10, 'max_features': None, 'max_depth': None, 'class_weight': 'balanced_subsample'}
 
-Score: 0.355917336078226
+    Score: 0.4473705692633168
 
-Balanced Accuracy: 0.5900393556652043
-Precision: 0.784076147287371
-Recall: 0.1929272970302784
-F1 Score: 0.30966050865402106
-MCC Score: 0.3338684035940022
+    Balanced Accuracy: 0.6507723249298547
+    Precision: 0.461598891237841
+    Recall: 0.4200209217179055
+    F1 Score: 0.43982947958410545
+    MCC Score: 0.3127297564894693
 
-================================================================================
-
-ROC AUC Score: 0.7667
-PR AUC Score: 0.5116218127739453
-Extreme Gradient Boosting
-
-Model: XGBClassifier(base_score=None, booster=None, callbacks=None,
-              colsample_bylevel=None, colsample_bynode=None,
-              colsample_bytree=0.7, device=None, early_stopping_rounds=None,
-              enable_categorical=False, eval_metric=None, feature_types=None,
-              feature_weights=None, gamma=None, grow_policy=None,
-              importance_type=None, interaction_constraints=None,
-              learning_rate=0.05, max_bin=None, max_cat_threshold=None,
-              max_cat_to_onehot=None, max_delta_step=None, max_depth=3,
-              max_leaves=None, min_child_weight=None, missing=nan,
-              monotone_constraints=None, multi_strategy=None, n_estimators=300,
-              n_jobs=None, num_parallel_tree=None, ...)
-
-Parameters: {'subsample': 0.9, 'scale_pos_weight': 4, 'n_estimators': 300, 'max_depth': 3, 'learning_rate': 0.05, 'colsample_bytree': 0.7}
-
-Score: 0.4462947574861739
-
-Balanced Accuracy: 0.676183321251626
-Precision: 0.38389211303182214
-Recall: 0.5758760969372929
-F1 Score: 0.46068267192323425
-MCC Score: 0.30684987399924685
+    ROC AUC Score: 0.7569
+    PR AUC Score: 0.5045214224741926
 
 ================================================================================
 
-ROC AUC Score: 0.7606
-PR AUC Score: 0.49164300917504167
+- **Histogram-based Gradient Boosting**
+
+    Model: HistGradientBoostingClassifier(learning_rate=0.3, max_depth=9, max_iter=200, max_leaf_nodes=62, min_samples_leaf=30, random_state=42)
+
+    Parameters: {'min_samples_leaf': 30, 'max_leaf_nodes': 62, 'max_iter': 200, 'max_depth': 9, 'learning_rate': 0.3}
+
+    Score: 0.355917336078226
+
+    Balanced Accuracy: 0.5900393556652043
+    Precision: 0.784076147287371
+    Recall: 0.1929272970302784
+    F1 Score: 0.30966050865402106
+    MCC Score: 0.3338684035940022
+
+    ROC AUC Score: 0.7667
+    PR AUC Score: 0.5116218127739453
+
+================================================================================
+
+- **Extreme Gradient Boosting**
+
+    Model: XGBClassifier(base_score=None, booster=None, callbacks=None, colsample_bylevel=None, colsample_bynode=None, colsample_bytree=0.7, device=None, early_stopping_rounds=None, enable_categorical=False, eval_metric=None, feature_types=None, feature_weights=None, gamma=None, grow_policy=None, importance_type=None, interaction_constraints=None, learning_rate=0.05, max_bin=None, max_cat_threshold=None, max_cat_to_onehot=None, max_delta_step=None, max_depth=3, max_leaves=None, min_child_weight=None, missing=nan, monotone_constraints=None, multi_strategy=None, n_estimators=300, n_jobs=None, num_parallel_tree=None, ...)
+
+    Parameters: {'subsample': 0.9, 'scale_pos_weight': 4, 'n_estimators': 300, 'max_depth': 3, 'learning_rate': 0.05, 'colsample_bytree': 0.7}
+
+    Score: 0.4462947574861739
+
+    Balanced Accuracy: 0.676183321251626
+    Precision: 0.38389211303182214
+    Recall: 0.5758760969372929
+    F1 Score: 0.46068267192323425
+    MCC Score: 0.30684987399924685
+
+    ROC AUC Score: 0.7606
+    PR AUC Score: 0.49164300917504167
+
+## Fifth Trial
+
+**Output**
+
+Changed so balances the training set using inbalanced learn
+
+- **Logistic Regression**
+
+    Model: LogisticRegression(C=10, class_weight='balanced', max_iter=1000, random_state=42)
+
+    Parameters: {'class_weight': 'balanced', 'C': 10}
+
+    Score: 0.8188111307337674
+
+    Balanced Accuracy: 0.5874975421503522
+    Precision: 0.6809641260101466
+    Recall: 0.19735572732027662
+    F1 Score: 0.3060210237948265
+    MCC Score: 0.30029368204694323
+
+    ROC AUC Score: 0.7325
+    PR AUC Score: 0.43945269791196784
+
+================================================================================
+
+- **Random Forest**
+
+    Model: RandomForestClassifier(class_weight='balanced_subsample', random_state=42)
+
+    Parameters: {'n_estimators': 100, 'min_samples_leaf': 1, 'max_features': 'sqrt', 'max_depth': None, 'class_weight': 'balanced_subsample'}
+
+    Score: 0.8256812553704355
+
+    Balanced Accuracy: 0.6078311495488606
+    Precision: 0.6032095356561915
+    Recall: 0.2564595804033242
+    F1 Score: 0.3599032732937238
+    MCC Score: 0.30990871509389767
+
+    ROC AUC Score: 0.7342
+    PR AUC Score: 0.48129402481378725
+
+================================================================================
+
+- **Histogram-based Gradient Boosting**
+
+    Model: HistGradientBoostingClassifier(learning_rate=0.3, max_depth=15, max_iter=300, random_state=42)
+
+    Parameters: {'min_samples_leaf': 20, 'max_leaf_nodes': 31, 'max_iter': 300, 'max_depth': 15, 'learning_rate': 0.3}
+
+    Score: 0.8212794531202722
+
+    Balanced Accuracy: 0.5963566099263672
+    Precision: 0.7189156295394763
+    Recall: 0.2128377985703493
+    F1 Score: 0.32843972521658027
+    MCC Score: 0.32740766075138156
+
+    ROC AUC Score: 0.7624
+    PR AUC Score: 0.5012412231791918
+
+================================================================================
+
+- **Extreme Gradient Boosting**
+
+    Model: XGBClassifier(base_score=None, booster=None, callbacks=None, colsample_bylevel=None, colsample_bynode=None, colsample_bytree=0.7, device=None, early_stopping_rounds=None, enable_categorical=False, eval_metric=None, feature_types=None, feature_weights=None, gamma=None, grow_policy=None, importance_type=None, interaction_constraints=None, learning_rate=0.3, max_bin=None, max_cat_threshold=None, max_cat_to_onehot=None, max_delta_step=None, max_depth=6, max_leaves=None, min_child_weight=None, missing=nan, monotone_constraints=None, multi_strategy=None, n_estimators=100, n_jobs=None, num_parallel_tree=None, ...)
+
+    Parameters: {'subsample': 0.7, 'scale_pos_weight': 1, 'n_estimators': 100, 'max_depth': 6, 'learning_rate': 0.3, 'colsample_bytree': 0.7}
+
+    Score: 0.8191187242773887
+
+    Balanced Accuracy: 0.5957872866124543
+    Precision: 0.7208689275166987
+    Recall: 0.21136746672865694
+    F1 Score: 0.3268875576906657
+    MCC Score: 0.3269506495173912
+
+    ROC AUC Score: 0.7605
+    PR AUC Score: 0.5022496526709197
