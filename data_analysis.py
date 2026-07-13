@@ -1,5 +1,6 @@
 import pandas as pd
-from data_extraction import load_data
+from data_extraction import load_data, simplify_data, linear_data, tree_data
+from create_models import split_data
 
 df = load_data("data/df2023-2026_anon.csv")
 
@@ -26,8 +27,16 @@ df.rename(columns={"AG_AMB_FECHA_CITA": "Appointment Date", "AG_HORA_CITA": "App
                     "AMB_TIPO_ATENCION": "Type of Visit", "AMB_HORA_LLEGADA": "Arrival Time",
                     "Año_Ingreso": "Year of Entry", "new_id": "New ID"}, inplace=True)
 
-df["Attendance Status"] = (df["Attendance Status"] == "NSP").astype(int)
 
-ct = pd.crosstab(df["Speciality Description"], df["Subspeciality Description"], df["Attendance Status"], margins=True)
 
-print(ct)
+# extracts data for both lienar and tree models
+linear_x, y = linear_data(simplify_data(load_data("data/df2023-2026_anon.csv")))
+tree_x, y = tree_data(simplify_data(load_data("data/df2023-2026_anon.csv")))
+
+# split both data types
+train_linear_x, test_linear_x, train_linear_y, test_linear_y = split_data(linear_x, y)
+train_tree_x, test_tree_x, train_tree_y,  test_tree_y = split_data(tree_x, y)
+
+print(train_linear_x.isna().sum().sum())
+print(train_tree_x.isna().sum().sum())
+print(train_tree_x.isna().sum()[train_tree_x.isna().sum() > 0])
