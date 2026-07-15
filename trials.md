@@ -494,3 +494,65 @@ MCC Score: 0.29311771739083187
 
 ROC AUC Score: 0.7407
 PR AUC Score: 0.4752225460022929
+
+## Seventh Trial
+
+Objective Function: F1 Score
+
+Logistic Regression
+
+Best Threshold: 0.45
+Best F1: 0.4363
+
+Balanced Accuracy: 0.5170332527287216
+Precision: 0.8266398929049531
+Recall: 0.035886557796245715
+F1 Score: 0.06878689985518548
+MCC: 0.14734367866655565
+ROC AUC Score: 0.7406
+PR AUC Score: 0.44716819692283505
+
+================================================================================
+
+Random Forest
+
+Best Threshold: 0.45
+Best F1: 0.4704
+
+Balanced Accuracy: 0.5512654827183334
+Precision: 0.931683784624961
+Recall: 0.10438193758354158
+F1 Score: 0.18773125405021218
+MCC: 0.2779296080127921
+ROC AUC Score: 0.7697
+PR AUC Score: 0.5158917453688137
+
+================================================================================
+
+Histogram-based Gradient Boosting
+
+Best Threshold: 0.20
+Best F1: 0.4674
+
+Balanced Accuracy: 0.5434911997927802
+Precision: 0.9514660639166196
+Recall: 0.08806880920555588
+F1 Score: 0.16121533854263634
+MCC: 0.2589016873376081
+ROC AUC Score: 0.7672
+PR AUC Score: 0.5131609220720333
+
+================================================================================
+
+Extreme Gradient Boosting
+
+Best Threshold: 0.50
+Best F1: 0.4727
+
+Balanced Accuracy: 0.5605934933015987
+Precision: 0.9234875444839857
+Recall: 0.12366478758644738
+F1 Score: 0.2181208741645824
+MCC: 0.30113024697693636
+ROC AUC Score: 0.7720
+PR AUC Score: 0.5197172946348194
