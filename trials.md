@@ -398,3 +398,99 @@ Changed so balances the training set using inbalanced learn
 
     ROC AUC Score: 0.7605
     PR AUC Score: 0.5022496526709197
+
+## Sixth Trial
+
+**Output**
+
+Removed Subspeciality Description
+
+Objective Function: F1 Score
+
+- **Logistic Regression**
+
+Model: LogisticRegression(C=10, class_weight={0: 1, 1: 4}, max_iter=1000,
+                   random_state=42)
+
+Parameters: {'class_weight': {0: 1, 1: 4}, 'C': 10}
+
+Score: 0.4111625413495703
+
+Balanced Accuracy: 0.6397339303329578
+Precision: 0.35027372665892814
+Recall: 0.5068169930842099
+F1 Score: 0.41424944364088057
+MCC Score: 0.24600682884063738
+
+ROC AUC Score: 0.7061
+PR AUC Score: 0.4024686196249958
+
+================================================================================
+
+- **Random Forest**
+
+Model: RandomForestClassifier(class_weight='balanced_subsample', max_features=None,
+                       min_samples_leaf=10, random_state=42)
+
+Parameters: {'n_estimators': 100, 'min_samples_leaf': 10, 'max_features': None, 'max_depth': None, 'class_weight': 'balanced_subsample'}
+
+Score: 0.4376396475895638
+
+Balanced Accuracy: 0.6462690225950476
+Precision: 0.4501439760060993
+Recall: 0.41518568024641134
+F1 Score: 0.43195869120283453
+MCC Score: 0.3017841876122704
+
+ROC AUC Score: 0.7428
+PR AUC Score: 0.49333292908351023
+
+================================================================================
+
+- **Histogram-based Gradient Boosting**
+
+Model: HistGradientBoostingClassifier(learning_rate=0.3, max_depth=9, max_iter=200,
+                               max_leaf_nodes=62, min_samples_leaf=30,
+                               random_state=42)
+
+Parameters: {'min_samples_leaf': 30, 'max_leaf_nodes': 62, 'max_iter': 200, 'max_depth': 9, 'learning_rate': 0.3}
+
+Score: 0.35074065174603536
+
+Balanced Accuracy: 0.5869464267803396
+Precision: 0.7954426466555309
+Recall: 0.18542453652583252
+F1 Score: 0.3007432333715083
+MCC Score: 0.3307949662497933
+
+ROC AUC Score: 0.7527
+PR AUC Score: 0.5014242053235135
+
+================================================================================
+
+- **Extreme Gradient Boosting**
+
+Model: XGBClassifier(base_score=None, booster=None, callbacks=None,
+              colsample_bylevel=None, colsample_bynode=None,
+              colsample_bytree=0.7, device=None, early_stopping_rounds=None,
+              enable_categorical=False, eval_metric=None, feature_types=None,
+              feature_weights=None, gamma=None, grow_policy=None,
+              importance_type=None, interaction_constraints=None,
+              learning_rate=0.05, max_bin=None, max_cat_threshold=None,
+              max_cat_to_onehot=None, max_delta_step=None, max_depth=3,
+              max_leaves=None, min_child_weight=None, missing=nan,
+              monotone_constraints=None, multi_strategy=None, n_estimators=300,
+              n_jobs=None, num_parallel_tree=None, ...)
+
+Parameters: {'subsample': 0.9, 'scale_pos_weight': 4, 'n_estimators': 300, 'max_depth': 3, 'learning_rate': 0.05, 'colsample_bytree': 0.7}
+
+Score: 0.44033661968067767
+
+Balanced Accuracy: 0.6652157355913617
+Precision: 0.3833060138546823
+Recall: 0.5408787121520312
+F1 Score: 0.448659358458913
+MCC Score: 0.29311771739083187
+
+ROC AUC Score: 0.7407
+PR AUC Score: 0.4752225460022929
