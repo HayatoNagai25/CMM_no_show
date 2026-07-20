@@ -5,7 +5,7 @@ import create_models
 import graph_visualization
 
 from data_extraction import load_data, simplify_data, tree_data, linear_data
-from create_models import split_data, find_best_models, print_stats, get_balanced_accuracy, get_precision, get_recall, get_f1_score, get_mcc, evaluate_model
+from create_models import split_data, find_best_models, print_stats, get_balanced_accuracy, get_precision, get_recall, get_f1_score, get_mcc, get_f2_score
 from graph_visualization import plot_confusion_matrix, plot_roc_auc, plot_pr_auc, plot_feature_importance
 
 
@@ -37,7 +37,7 @@ train_tree_x = train_tree.drop(columns="Attendance Status")
 # train_tree_x, train_tree_y = smote_tree.fit_resample(train_tree_x, train_tree_y)
 
 # define the objective function
-objective_fn = get_f1_score
+objective_fn = get_f2_score
 
 # define the number of trials
 num_trials = 20
@@ -45,48 +45,11 @@ num_trials = 20
 # find the best model for each of the four learning model
 results = find_best_models(train_linear_x, train_tree_x, train_linear_y, train_tree_y, objective_fn, num_trials)
 
-print("Objective Function: F1 Score")
+print("Objective Function: F2 Score")
 print()
 
-# # prints the stats
-# lin_model, y_lin_pred = print_stats(results, test_linear_x, test_linear_y, "Logistic Regression")
-
-# # find the prediction probability
-# y_lin_score = lin_model.predict_proba(test_linear_x)[:, 1]
-
-print("Logistic Regression")
-print()
-
-lin_model = results["Logistic Regression"][0]
-
-y_lin_score = lin_model.predict_proba(test_linear_x)[:, 1]
-
-best_threshold = 0.5
-best_f1 = -1
-
-thresholds = np.arange(0.05, 0.96, 0.05)
-scores = []
-
-for threshold in thresholds:
-    y_lin_pred = (y_lin_score >= threshold).astype(int)
-
-    f1 = evaluate_model(test_linear_y, y_lin_pred, get_f1_score)
-
-    if f1 > best_f1:
-        best_f1 = f1
-        best_threshold = threshold
-
-print(f"Best Threshold: {best_threshold:.2f}")
-print(f"Best F1: {best_f1:.4f}")
-print()
-
-y_lin_pred = (y_lin_score >= threshold).astype(int)
-
-print("Balanced Accuracy:", evaluate_model(test_linear_y, y_lin_pred, get_balanced_accuracy))
-print("Precision:", evaluate_model(test_linear_y, y_lin_pred, get_precision))
-print("Recall:", evaluate_model(test_linear_y, y_lin_pred, get_recall))
-print("F1 Score:", evaluate_model(test_linear_y, y_lin_pred, get_f1_score))
-print("MCC:", evaluate_model(test_linear_y, y_lin_pred, get_mcc))
+# prints the stats
+lin_model, y_lin_pred, y_lin_score = print_stats(results, test_linear_x, test_linear_y, objective_fn, "Logistic Regression")
 
 # plot graphs
 plot_confusion_matrix(test_linear_y, y_lin_pred, "Logistic Regression")
@@ -104,45 +67,8 @@ tree_names = ["Random Forest", "Histogram-based Gradient Boosting", "Extreme Gra
 # loops through all 3 tree-based models
 for tree_name in tree_names:
 
-    # # prints the stats
-    # model, y_pred = print_stats(results, test_tree_x, test_tree_y, tree_name)
-
-    # # find the prediction probability
-    # y_score = model.predict_proba(test_tree_x)[:, 1]
-
-    print(tree_name)
-    print()
-
-    model = results[tree_name][0]
-
-    y_score = model.predict_proba(test_tree_x)[:, 1]
-
-    best_threshold = 0.5
-    best_f1 = -1
-
-    thresholds = np.arange(0.05, 0.96, 0.05)
-    scores = []
-
-    for threshold in thresholds:
-        y_pred = (y_score >= threshold).astype(int)
-
-        f1 = evaluate_model(test_tree_y, y_pred, get_f1_score)
-
-        if f1 > best_f1:
-            best_f1 = f1
-            best_threshold = threshold
-
-    print(f"Best Threshold: {best_threshold:.2f}")
-    print(f"Best F1: {best_f1:.4f}")
-    print()
-
-    y_pred = (y_score >= threshold).astype(int)
-
-    print("Balanced Accuracy:", evaluate_model(test_tree_y, y_pred, get_balanced_accuracy))
-    print("Precision:", evaluate_model(test_tree_y, y_pred, get_precision))
-    print("Recall:", evaluate_model(test_tree_y, y_pred, get_recall))
-    print("F1 Score:", evaluate_model(test_tree_y, y_pred, get_f1_score))
-    print("MCC:", evaluate_model(test_tree_y, y_pred, get_mcc))
+    # prints the stats
+    model, y_pred, y_score = print_stats(results, test_tree_x, test_tree_y, objective_fn, tree_name)
 
     # plot graphs
     plot_confusion_matrix(test_tree_y, y_pred, tree_name)

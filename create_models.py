@@ -75,20 +75,23 @@ def find_best_models(linear_X, tree_X, linear_Y, tree_Y, objective_fn, num_trial
     return results
 
 
-def print_stats(results, test_x, test_y, name):
+def print_stats(results, test_x, test_y, objective_fn, name):
     """
     Prints the name of the model, its optimal model, its parameters, its score from the
-    objective function, and the scores for all the objective functions on the test set
+    objective function, the best threshold given its objective function, and the scores
+    for all the objective functions on the test set
 
     Params:
         results (dictionary): the model, its best parameters, and its score
         test_x (DataFrame): the test split of the data
         test_y (Series): the test split of the attendance status
+        objective_fn: a function that takes the model's (true neg, false pos, false neg, true pos)
+                        as input and outputs a float value
         name (string): the name of the model
 
-    Returns: (model, y_pred)
-                model is the type of model used and y_pred is the
-                predicted attendance status for the test split
+    Returns: (model, y_pred, y_score)
+                model is the type of model used, y_pred is the predicted attendance status
+                for the test split, and y_score is the probability of predicting no-show
     """
     print(name)
     print()
@@ -103,17 +106,27 @@ def print_stats(results, test_x, test_y, name):
     print("Score:", results[name][2])
     print()
 
-    # predict and evaluate
-    y_pred = model.predict(test_x)
+    # calculate the predicted probability of no-show
+    y_score = model.predict_proba(test_x)[:, 1]
+
+    # find the best threshold
+    best_threshold = find_best_threshold(test_y, y_score, objective_fn)
+
+    print(f"Best Threshold: {best_threshold:.2f}")
+    print()
+
+    # find the predictions given the best threshold
+    y_pred = (y_score >= best_threshold).astype(int)
 
     print("Balanced Accuracy:", evaluate_model(test_y, y_pred, get_balanced_accuracy))
     print("Precision:", evaluate_model(test_y, y_pred, get_precision))
     print("Recall:", evaluate_model(test_y, y_pred, get_recall))
     print("F1 Score:", evaluate_model(test_y, y_pred, get_f1_score))
     print("MCC Score:", evaluate_model(test_y, y_pred, get_mcc))
+    print("F2 Score:", evaluate_model(test_y, y_pred, get_f2_score))
     print()
 
-    return model, y_pred
+    return model, y_pred, y_score
 
 
 #######################################################################################################
@@ -167,7 +180,7 @@ def logistic_regression(val_X, val_Y, objective_fn, num_trials):
                 best_model is the best model given the set of parameters, and measured by the score
     """
     # the parameters to test
-    params = {"C": [0.01, 0.1, 1, 10, 100],
+    params = {"C": [0.001, 0.001, 0.01, 0.1, 1, 10],
               "class_weight": ["balanced", None, {0: 1, 1: 1}, {0: 1, 1: 2},
                                {0: 1, 1: 3}, {0: 1, 1: 4}, {0: 1, 1: 5}]}
 
@@ -195,9 +208,10 @@ def random_forest(val_X, val_Y, objective_fn, num_trials):
     """
     # the parameters to test
     params = {"n_estimators": [100, 200, 500],
-              "max_features": ["sqrt", "log2", None],
-              "max_depth": [None, 10, 20, 30],
-              "min_samples_leaf": [1, 5, 10],
+              "max_features": ["sqrt", "log2"],
+              "max_depth": [5, 10, 20, 30],
+              "min_samples_leaf": [5, 10, 20],
+              "min_samples_split": [5, 10, 20],
               "class_weight": ["balanced", "balanced_subsample", None]}
 
     # finds the best model, its parameters, and its score
@@ -270,8 +284,8 @@ def evaluate_model(y_true, y_pred, objective_fn):
     Evaluates the given model according to the provided objective function
 
     Params:
-        y_true (Series): the actual y values
-        y_pred (Series): the predicted y values
+        y_true (Series): the actual attendance status
+        y_pred (Series): the predicted attendance status
         objective_fn: a function that takes the model's (true neg, false pos, false neg, true pos)
                         as input and outputs a float value
 
@@ -281,6 +295,36 @@ def evaluate_model(y_true, y_pred, objective_fn):
     tn, fp, fn, tp = confusion_matrix(y_true, y_pred).ravel()
 
     return objective_fn(tn, fp, fn, tp)
+
+
+def find_best_threshold(y_true, y_score, objective_fn):
+    """
+    Finds the best threshold given the objective function
+
+    Params:
+        test_y (Series): the actual attendance status
+        y_score (int): the probability of predicting a no-show
+        objective_fn: a function that takes the model's (true neg, false pos, false neg, true pos)
+                        as input and outputs a float value
+
+    Returns: an int that represents the best threshold for predictions given the objective function
+    """
+
+    best_threshold = 0.5
+    best_score = -1
+
+    thresholds = np.arange(0.05, 0.96, 0.01)
+
+    for threshold in thresholds:
+        pred = (y_score >= threshold).astype(int)
+
+        score = evaluate_model(y_true, pred, objective_fn)
+
+        if score > best_score:
+            best_score = score
+            best_threshold = threshold
+
+    return best_threshold
 
 
 #######################################################################################################
@@ -323,3 +367,13 @@ def get_mcc(tn, fp, fn, tp):
     if den == 0:
         return 0
     return (float(tp * tn) - float(fp * fn)) / np.sqrt(den)
+
+def get_f2_score(tn, fp, fn, tp):
+    if tp + fp == 0 or tp + fn == 0:
+        return 0
+    precision = tp / (tp + fp)
+    recall = tp / (tp + fn)
+    beta = 2
+    if precision + recall == 0:
+        return 0
+    return (1 + beta**2) * precision * recall / (beta**2 * precision + recall)
