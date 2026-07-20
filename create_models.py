@@ -309,18 +309,27 @@ def find_best_threshold(y_true, y_score, objective_fn):
 
     Returns: an int that represents the best threshold for predictions given the objective function
     """
-
+    # define initial best threshold and score
     best_threshold = 0.5
     best_score = -1
 
+    # create a list of all thresholds to check
     thresholds = np.arange(0.05, 0.96, 0.01)
 
+    # loop through all the thresholds
     for threshold in thresholds:
+
+        # preidct positive if score is higher than threshold
         pred = (y_score >= threshold).astype(int)
 
+        # evaluate the model given the predictions
         score = evaluate_model(y_true, pred, objective_fn)
 
-        if score > best_score:
+        # find the model's recall
+        recall = evaluate_model(y_true, pred, get_recall)
+
+        # change threshold if both recall and precision are high
+        if score > best_score and recall >= 0.75:
             best_score = score
             best_threshold = threshold
 
