@@ -30,24 +30,24 @@ def plot_confusion_matrix(y_true, y_pred, name):
     plt.show()
 
 
-def plot_roc_auc(y_true, y_scores, name):
+def plot_roc_auc(y_true, y_score, name):
     """
     Plots the receiver operating characteristic (ROC) area under the curve graph
 
     Params:
         y_true (Series) : the actual attendance status
-        y_scores (Series): the probability of predicting no-show
+        y_score (Series): the probability of predicting no-show
         name (string): the name of the model
 
     Returns: None (plots a ROC AUC graph)
     """
     # finds the auc score
-    auc_score = roc_auc_score(y_true, y_scores)
+    auc_score = roc_auc_score(y_true, y_score)
 
     print(f"ROC AUC Score: {auc_score:.4f}")
 
     # computes the receiver operating characteristic
-    fpr, tpr, _ = roc_curve(y_true, y_scores)
+    fpr, tpr, _ = roc_curve(y_true, y_score)
 
     plt.figure(figsize=(8,6))
     plt.plot(fpr, tpr, color="blue", lw=2, label=f"ROC Curve (AUC = {auc_score:.3f})")
@@ -61,19 +61,19 @@ def plot_roc_auc(y_true, y_scores, name):
     plt.show()
 
 
-def plot_pr_auc(y_true, y_scores, name):
+def plot_pr_auc(y_true, y_score, name):
     """
     Plots the precision-recall (PR) area under the curve graph
 
     Params:
         y_true (Series): the actual attendance status
-        y_scores (Series): the probablity of predicting no-show
+        y_score (Series): the probablity of predicting no-show
         name (string): the name of the model
 
     Returns: None (plots a PR AUC graph)
     """
     # calculates the precision and recall
-    precision, recall, _ = precision_recall_curve(y_true, y_scores)
+    precision, recall, _ = precision_recall_curve(y_true, y_score)
 
     # computes the area udner the PR graph
     pr_auc = auc(recall, precision)
