@@ -314,7 +314,7 @@ def find_best_threshold(y_true, y_score, objective_fn):
     best_score = -1
 
     # create a list of all thresholds to check
-    thresholds = np.arange(0.05, 0.96, 0.01)
+    thresholds = np.arange(0.40, 0.96, 0.01)
 
     # loop through all the thresholds
     for threshold in thresholds:
