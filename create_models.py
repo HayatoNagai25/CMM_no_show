@@ -180,7 +180,7 @@ def logistic_regression(val_X, val_Y, objective_fn, num_trials):
                 best_model is the best model given the set of parameters, and measured by the score
     """
     # the parameters to test
-    params = {"C": [0.001, 0.001, 0.01, 0.1, 1, 10],
+    params = {"C": [0.0001, 0.001, 0.01, 0.1, 1, 10],
               "class_weight": ["balanced", None, {0: 1, 1: 1}, {0: 1, 1: 2},
                                {0: 1, 1: 3}, {0: 1, 1: 4}, {0: 1, 1: 5}]}
 
@@ -267,7 +267,7 @@ def x_grad_boost(val_X, val_Y, objective_fn, num_trials):
     """
     # the parameters to test
     params = {"learning_rate": [0.01, 0.05, 0.1, 0.3],
-              "n_estimators": [100, 200,300],
+              "n_estimators": [100, 200, 300],
               "max_depth": [3, 6, 9],
               "subsample": [0.7, 0.9, 1.0],
               "colsample_bytree": [0.7, 0.9, 1.0],
@@ -328,8 +328,11 @@ def find_best_threshold(y_true, y_score, objective_fn):
         # find the model's recall
         recall = evaluate_model(y_true, pred, get_recall)
 
+        # find the model's precision
+        precision = evaluate_model(y_true, pred, get_precision)
+
         # change threshold if both recall and precision are high
-        if score > best_score and recall >= 0.75:
+        if score > best_score and recall >= 0.75 and precision >= 0.35:
             best_score = score
             best_threshold = threshold
 
