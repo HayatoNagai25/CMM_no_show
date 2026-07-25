@@ -325,14 +325,11 @@ def find_best_threshold(y_true, y_score, objective_fn):
         # evaluate the model given the predictions
         score = evaluate_model(y_true, pred, objective_fn)
 
-        # find the model's recall
-        recall = evaluate_model(y_true, pred, get_recall)
-
         # find the model's precision
         precision = evaluate_model(y_true, pred, get_precision)
 
         # change threshold if both recall and precision are high
-        if score > best_score and recall >= 0.75 and precision >= 0.35:
+        if score > best_score and precision >= 0.25:
             best_score = score
             best_threshold = threshold
 
